@@ -29,7 +29,7 @@ namespace Raychel {
     struct QuaternionImp;
 
     template <std::floating_point _real>
-    struct Transform;
+    struct TransformImp;
 } // namespace Raychel
 
 #endif //!RAYCHEL_MATH_FORWARD_H
