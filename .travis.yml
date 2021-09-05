@@ -2,11 +2,17 @@ dist: bionic
 sudo: false
 
 language: cpp
-compiler:
-  - clang
-  - gcc
+# compiler:
+#   - clang
+#   - gcc
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-12
 
 sript:
-  - cmake -DRAYCHELMATH_BUILD_TESTS:BOOL=TRUE .
+  - CXX=/usr/bin/clang-12 CC=/usr/bin/clang-12 cmake .
   - cmake --build . -- -j 2
-  - ctest
