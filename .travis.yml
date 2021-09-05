@@ -7,6 +7,6 @@ compiler:
   - gcc
 
 sript:
-  - cmake -DRAYCHELMATH_BUILD_TESTS .
+  - cmake -DRAYCHELMATH_BUILD_TESTS:BOOL=TRUE .
   - cmake --build . -- -j 2
   - ctest
