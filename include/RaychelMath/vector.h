@@ -119,7 +119,7 @@ namespace Raychel {
     * \param rng random number generator used to generate the distribution
     * \return  
     */
-    template <std::floating_point T, std::invocable<T> RNG_t>
+    template <std::floating_point T, std::invocable RNG_t>
     vec3Imp<T> get_random_direction_on_cone_angle(const vec3Imp<T>& normal, T half_cone_angle, const RNG_t& rng) noexcept;
 } // namespace Raychel
 

@@ -32,14 +32,14 @@
 namespace Raychel {
 
     template <std::floating_point T>
-    [[nodiscard]] vec3Imp<T> TransformImp<T>::apply(const vec3& p) const noexcept
+    [[nodiscard]] constexpr auto TransformImp<T>::apply(const vec3& p) const noexcept -> vec3
     {
         return (p - position) * rotation;
     }
 
     template <std::floating_point T>
-    template <typename To>
-    TransformImp<To> TransformImp<T>::to() const noexcept
+    template <std::floating_point To>
+    constexpr TransformImp<To> TransformImp<T>::to() const noexcept
     {
         using vt = typename TransformImp<To>::value_type;
         static_assert(

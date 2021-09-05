@@ -68,7 +68,7 @@ namespace Raychel {
         *\tparam To Type of the converted Transform
         *\return TransformImp<T> 
         */
-        template <typename To>
+        template <std::floating_point To>
         constexpr TransformImp<To> to() const noexcept;
 
         vec3 position;
