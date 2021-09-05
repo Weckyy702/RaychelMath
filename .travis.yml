@@ -1,0 +1,12 @@
+dist: bionic
+sudo: false
+
+language: cpp
+compiler:
+  - clang
+  - gcc
+
+sript:
+  - cmake -DRAYCHELMATH_BUILD_TESTS .
+  - cmake --build . -- -j 2
+  - ctest
