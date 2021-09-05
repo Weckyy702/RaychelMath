@@ -9,7 +9,7 @@ language: cpp
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+      - llvm-toolchain-bionic-12 main
     packages:
       - clang-12
 
