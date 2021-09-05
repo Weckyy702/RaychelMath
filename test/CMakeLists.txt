@@ -1,4 +1,3 @@
-find_package(RaychelMath REQUIRED)
 find_package(Catch2 CONFIG REQUIRED)
 find_package(RaychelLogger REQUIRED)
 
@@ -12,7 +11,7 @@ add_executable(Unit_test
 target_compile_features(Unit_test PUBLIC cxx_std_20)
 
 target_link_libraries(Unit_test
-    INTERFACE RaychelMath
+    PUBLIC RaychelMath
     PUBLIC RaychelLogger
     PUBLIC Catch2::Catch2
 )
