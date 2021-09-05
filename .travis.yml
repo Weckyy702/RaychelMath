@@ -1,17 +1,14 @@
 dist: bionic
-sudo: false
 
 language: cpp
 # compiler:
 #   - clang
 #   - gcc
 
-addons:
-  apt:
-    sources:
-      - llvm-toolchain-bionic-12 main
-    packages:
-      - clang-12
+before_install:
+  - sudo add-apt-repository ppa:llvm-toolchain-bionic-12/main
+  - sudo apt-get -q update
+  - sudo apt-get -y install clang-12
 
 sript:
   - CXX=/usr/bin/clang-12 CC=/usr/bin/clang-12 cmake .
