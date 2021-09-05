@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-option(RAYCHELMATH_BUILD_TESTS "If Unit tests should be built alongside the library. Requires Catch2" OFF)
+option(RAYCHELMATH_BUILD_TESTS "If Unit tests should be built alongside the library. Requires Catch2" ON)
 
 project(RaychelMath VERSION 1.0.0)
 
