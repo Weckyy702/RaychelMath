@@ -1,15 +1,10 @@
-dist: bionic
+dist: focal
 
 language: cpp
-# compiler:
-#   - clang
-#   - gcc
-
-before_install:
-  - sudo add-apt-repository deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main
-  - sudo apt-get -q update
-  - sudo apt-get -y install clang-12
+compiler:
+  - clang
+  - gcc
 
 sript:
-  - CXX=/usr/bin/clang-12 CC=/usr/bin/clang-12 cmake .
+  - cmake .
   - cmake --build . -- -j 2
