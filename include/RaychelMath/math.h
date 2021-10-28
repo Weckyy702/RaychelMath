@@ -59,9 +59,9 @@ namespace Raychel {
     template <std::integral _integral>
     constexpr _integral bit(size_t shift)
     {
-        if constexpr (std::is_constant_evaluated()) {
+        if (std::is_constant_evaluated()) {
             //issue a compiler error if we try to get the 10 billionth bit of an 8-bit integer
-            static_assert(shift < sizeof(_integral) * 8, "tried to get bit outside of the underlying types range!");
+            static_assert(shift < (sizeof(_integral) * 8), "tried to get bit outside of the underlying types range!");
         } else {
             RAYCHEL_ASSERT(shift < (sizeof(_integral) * 8));
         }
