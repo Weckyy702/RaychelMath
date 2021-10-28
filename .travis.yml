@@ -5,6 +5,6 @@ compiler:
   - clang
   - gcc
 
-sript:
+script:
   - cmake .
   - cmake --build . -- -j 2

@@ -44,7 +44,7 @@ TEST_CASE("Raychel::StdRandomNumberEngine", "[RaychelMath][Concepts]")
     REQUIRE(StdRandomNumberEngine<std::knuth_b>);
     REQUIRE(StdRandomNumberEngine<std::default_random_engine>);
 
-    constexpr auto best_rng_ever = []() -> std::uint32_t { return 42u; };
+    constexpr auto best_rng_ever = []() -> std::uint32_t { return 42U; };
     REQUIRE(!StdRandomNumberEngine<decltype(best_rng_ever)>);
     REQUIRE(!StdRandomNumberEngine<unsigned int>);
 }
