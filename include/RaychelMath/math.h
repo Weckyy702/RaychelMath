@@ -28,10 +28,12 @@
 #ifndef RAYCHEL_MATH_H
 #define RAYCHEL_MATH_H
 
+#include <cmath>
 #include <cstddef>
 #include <type_traits>
 #include "RaychelCore/Raychel_assert.h"
 #include "concepts.h"
+#include "equivalent.h"
 
 namespace Raychel {
 
@@ -75,8 +77,8 @@ namespace Raychel {
     *\param base base for the digit calculation
 	*\return constexpr int 
 	*/
-    template <std::integral _num>
-    constexpr int numDigits(_num num, std::size_t base = 10U)
+    template <std::integral _Num>
+    constexpr int numDigits(_Num num, std::size_t base = 10U)
     {
         //Hope computers can never represent integers with more than 2 billion digits ;)
         int digits = 0;
@@ -86,6 +88,18 @@ namespace Raychel {
         } while (num != 0);
 
         return digits;
+    }
+
+    template<std::floating_point _Real>
+    constexpr bool is_integer(_Real num) noexcept
+    {
+        return equivalent<_Real>(std::fmod(num, 1), 0);
+    }
+
+    template<std::integral _Num>
+    constexpr bool is_integer(_Num /*unused*/) noexcept
+    {
+        return true;
     }
 
 } // namespace Raychel
