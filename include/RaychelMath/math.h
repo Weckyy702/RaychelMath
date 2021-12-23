@@ -61,12 +61,7 @@ namespace Raychel {
     template <std::integral _integral>
     constexpr _integral bit(size_t shift)
     {
-        if (std::is_constant_evaluated()) {
-            //issue a compiler error if we try to get the 10 billionth bit of an 8-bit integer
-            static_assert(shift < (sizeof(_integral) * 8), "tried to get bit outside of the underlying types range!");
-        } else {
-            RAYCHEL_ASSERT(shift < (sizeof(_integral) * 8));
-        }
+        RAYCHEL_ASSERT(shift < (sizeof(_integral) * 8));
         return static_cast<_integral>(1U << shift);
     }
 
@@ -90,14 +85,14 @@ namespace Raychel {
         return digits;
     }
 
-    template<std::floating_point _Real>
-    constexpr bool is_integer(_Real num) noexcept
+    template<std::floating_point Real>
+    constexpr bool is_integer(Real num) noexcept
     {
-        return equivalent<_Real>(std::fmod(num, 1), 0);
+        return equivalent<Real>(static_cast<Real>(std::fmod(num, 1)), 0);
     }
 
-    template<std::integral _Num>
-    constexpr bool is_integer(_Num /*unused*/) noexcept
+    template<std::integral Num>
+    constexpr bool is_integer(Num /*unused*/) noexcept
     {
         return true;
     }
