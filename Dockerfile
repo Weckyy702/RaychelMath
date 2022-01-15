@@ -5,7 +5,7 @@ COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 
 #Configure step
-RUN cmake .
+RUN cmake -DRAYCHELMATH_BUILD_TESTS=ON .
 RUN cmake --build . --target all test
 
 LABEL Name=raychelmath Version=0.0.1

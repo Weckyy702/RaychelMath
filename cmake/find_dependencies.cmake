@@ -1,6 +1,6 @@
 include(FetchContent)
 
-if(RAYCHELMATH_BUILD_TESTS)
+if(${RAYCHELMATH_BUILD_TESTS})
     find_package(Catch2 QUIET)
 
     if(NOT Catch2_FOUND)
