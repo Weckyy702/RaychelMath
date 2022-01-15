@@ -4,6 +4,8 @@ option(RAYCHELMATH_BUILD_TESTS "If Unit tests should be built alongside the libr
 
 project(RaychelMath VERSION 1.0.0)
 
+include(cmake/find_dependencies.cmake)
+
 add_subdirectory(src)
 
 if(${RAYCHELMATH_BUILD_TESTS})

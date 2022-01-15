@@ -25,7 +25,18 @@ target_include_directories(RaychelMath INTERFACE
 )
 target_compile_features(RaychelMath INTERFACE cxx_std_20)
 
+if(NOT RAYCHEL_CORE_EXTERNAL)
+    find_package(RaychelCore REQUIRED)
+endif()
 
+target_link_libraries(RaychelMath INTERFACE
+    RaychelCore
+)
+if(GSL_EXTERNAL)
+    target_link_libraries(RaychelMath INTERFACE
+        GSL
+    )
+endif()
 
 #INSTALLING
 install(TARGETS RaychelMath
