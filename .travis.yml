@@ -7,4 +7,4 @@ compiler:
   - clang
 
 script:
-  - docker build --no-cache --build-arg=${CXX_FOR_BUILD} .
+  - docker build --no-cache --build-arg COMPILER=${CXX_FOR_BUILD} .
