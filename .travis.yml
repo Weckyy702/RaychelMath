@@ -2,5 +2,9 @@ dist: focal
 
 language: cpp
 
+compiler:
+  - gcc
+  - clang
+
 script:
-  - docker build --no-cache .
+  - docker build --no-cache --build-arg=${CXX_FOR_BUILD} .
