@@ -32,11 +32,6 @@ endif()
 target_link_libraries(RaychelMath INTERFACE
     RaychelCore
 )
-if(GSL_EXTERNAL)
-    target_link_libraries(RaychelMath INTERFACE
-        GSL
-    )
-endif()
 
 #INSTALLING
 install(TARGETS RaychelMath

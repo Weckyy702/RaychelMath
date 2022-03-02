@@ -34,19 +34,4 @@ if(NOT RaychelCore_FOUND)
     FetchContent_MakeAvailable(RAYCHEL_CORE)
 
     set(RAYCHEL_CORE_EXTERNAL true)
-
-endif()
-
-find_file(GSL_MAIN_INCLUDE "gsl/gsl")
-if(NOT GSL_MAIN_INCLUDE)
-    message(STATUS "Could not find a local installation of the GSL, downloading one off github...")
-
-    FetchContent_Declare(GSL
-        GIT_REPOSITORY "https://github.com/microsoft/GSL"
-        GIT_TAG "v3.1.0"
-    )
-
-    FetchContent_MakeAvailable(GSL)
-
-    set(GSL_EXTERNAL true)
 endif()

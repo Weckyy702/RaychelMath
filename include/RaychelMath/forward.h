@@ -3,13 +3,10 @@
 #define RAYCHEL_MATH_FORWARD_H
 
 #include <cstddef>
-#include <gsl/gsl>
 #include "RaychelCore/compat.h"
 #include "concepts.h"
 
 namespace Raychel {
-    using gsl::not_null; //NOLINT(misc-unused-using-decls)
-    using std::size_t;   //NOLINT(misc-unused-using-decls)
 
     template <Arithmetic _number>
     struct vec2Imp;
