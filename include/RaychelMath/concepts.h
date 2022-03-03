@@ -53,7 +53,16 @@ namespace Raychel {
     } // namespace details
 
     template <typename T>
-    concept Arithmetic = std::is_arithmetic_v<T>;
+    concept Arithmetic = requires(const T a)
+    {
+        {a + a} -> std::convertible_to<T>;
+        {a - a} -> std::convertible_to<T>;
+        {a * a} -> std::convertible_to<T>;
+        {a / a} -> std::convertible_to<T>;
+    };
+
+    template<typename T>
+    concept SignedArithmetic = Arithmetic<T> && std::is_signed_v<T>;
 
     template<typename E>
     concept StdRandomNumberEngine = requires(E e, const E x, unsigned long long z, std::ostream& os, std::istream& is)

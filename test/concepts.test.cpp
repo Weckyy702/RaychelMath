@@ -9,21 +9,32 @@ TEST_CASE("Raychel::Arithmetic", "[RaychelMath][Concepts]")
     using namespace Raychel;
 
     REQUIRE(Arithmetic<bool>);
+    REQUIRE(!SignedArithmetic<bool>);
 
     REQUIRE(Arithmetic<char>);
     REQUIRE(Arithmetic<unsigned char>);
+    REQUIRE(SignedArithmetic<char>);
+    REQUIRE(!SignedArithmetic<unsigned char>);
 
     REQUIRE(Arithmetic<short>);
     REQUIRE(Arithmetic<unsigned short>);
+    REQUIRE(SignedArithmetic<short>);
+    REQUIRE(!SignedArithmetic<unsigned short>);
 
     REQUIRE(Arithmetic<int>);
     REQUIRE(Arithmetic<unsigned int>);
+    REQUIRE(SignedArithmetic<int>);
+    REQUIRE(!SignedArithmetic<unsigned int>);
 
     REQUIRE(Arithmetic<long>);
     REQUIRE(Arithmetic<unsigned long>);
+    REQUIRE(SignedArithmetic<long>);
+    REQUIRE(!SignedArithmetic<unsigned long>);
 
     REQUIRE(Arithmetic<long long>);
     REQUIRE(Arithmetic<unsigned long long>);
+    REQUIRE(SignedArithmetic<long long>);
+    REQUIRE(!SignedArithmetic<unsigned long long>);
 
     REQUIRE(!Arithmetic<std::vector<int>>);
     REQUIRE(!Arithmetic<std::default_random_engine>);
