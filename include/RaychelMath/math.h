@@ -85,13 +85,13 @@ namespace Raychel {
         return digits;
     }
 
-    template<std::floating_point Real>
+    template <std::floating_point Real>
     constexpr bool is_integer(Real num) noexcept
     {
         return equivalent<Real>(static_cast<Real>(std::fmod(num, 1)), 0);
     }
 
-    template<std::integral Num>
+    template <std::integral Num>
     constexpr bool is_integer(Num /*unused*/) noexcept
     {
         return true;

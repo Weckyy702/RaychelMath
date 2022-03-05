@@ -84,7 +84,7 @@ TEST_CASE("Raychel::StdRandomNumberDistribution", "[RaychelMath][Concepts]")
     REQUIRE(StdRandomNumberDistribution<std::student_t_distribution<>>);
     REQUIRE(StdRandomNumberDistribution<std::discrete_distribution<>>);
     REQUIRE(StdRandomNumberDistribution<std::piecewise_constant_distribution<>>);
-    REQUIRE(StdRandomNumberDistribution<std:: piecewise_linear_distribution<>>);
+    REQUIRE(StdRandomNumberDistribution<std::piecewise_linear_distribution<>>);
 
     constexpr auto best_distribution_ever = [](auto rng) { return rng(); };
     REQUIRE(!StdRandomNumberDistribution<decltype(best_distribution_ever)>);

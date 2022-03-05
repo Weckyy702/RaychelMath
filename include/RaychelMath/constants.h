@@ -40,10 +40,10 @@ namespace Raychel {
     template <std::floating_point _real>
     constexpr auto quarter_pi = pi_v<_real> / 4;
 
-    template<std::floating_point _real>
+    template <std::floating_point _real>
     constexpr auto deg_to_rad = pi_v<_real> / 180;
 
-    template<std::floating_point _real>
+    template <std::floating_point _real>
     constexpr auto rad_to_deg = 180 / pi_v<_real>;
 
 } // namespace Raychel

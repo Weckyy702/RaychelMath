@@ -29,17 +29,17 @@
 #define RAYCHEL_MATH_CONCEPTS_H
 
 #include <concepts>
-#include <type_traits>
 #include <random>
+#include <type_traits>
 
 namespace Raychel {
 
     namespace details {
 
-        template<typename T>
+        template <typename T>
         concept Void = std::is_void_v<T>;
 
-        template<typename P, typename D>
+        template <typename P, typename D>
         concept StdRandomNumberDistributionParamType = requires(P p)
         {
             std::is_copy_constructible_v<P>;
@@ -61,10 +61,10 @@ namespace Raychel {
         {a / a} -> std::convertible_to<T>;
     };
 
-    template<typename T>
+    template <typename T>
     concept SignedArithmetic = Arithmetic<T> && std::is_signed_v<T>;
 
-    template<typename E>
+    template <typename E>
     concept StdRandomNumberEngine = requires(E e, const E x, unsigned long long z, std::ostream& os, std::istream& is)
     {
         std::uniform_random_bit_generator<E>;
@@ -92,7 +92,7 @@ namespace Raychel {
         { is >> e } -> std::same_as<decltype(is)&>;
     };
 
-    template<typename D>
+    template <typename D>
     concept StdRandomNumberDistribution = requires(D d, const D x, std::ostream& os, std::istream& is)
     {
         std::is_copy_constructible_v<D>;
