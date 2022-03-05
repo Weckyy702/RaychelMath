@@ -8,6 +8,9 @@
 
 namespace Raychel {
 
+    template <Arithmetic T, std::size_t N, typename Tag>
+    struct Tuple;
+
     template <Arithmetic _number>
     struct vec2Imp;
 
@@ -16,11 +19,6 @@ namespace Raychel {
 
     template <Arithmetic _number>
     struct colorImp;
-
-    /*
-    template<Arithmetic T>
-    struct colorAImp;
-    */
 
     template <std::floating_point _real>
     struct QuaternionImp;
