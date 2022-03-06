@@ -83,12 +83,6 @@ namespace Raychel {
             }
         }
 
-        template <std::size_t I>
-        requires(I < N) constexpr T get() const
-        {
-            return data_[I];
-        }
-
         template <std::size_t N_, TupleConvertable<Tag> Tag_>
         requires(N_ >= N) constexpr operator Tuple<T, N_, Tag_>() const
         {
@@ -115,6 +109,12 @@ namespace Raychel {
                 RAYCHEL_ASSERT(i < N);
             }
             return data_[i];
+        }
+
+        template <std::size_t I>
+        requires(I < N) constexpr T get() const
+        {
+            return data_[I];
         }
 
         template <TupleConvertable<Tag> Tag_>

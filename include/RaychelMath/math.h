@@ -72,8 +72,8 @@ namespace Raychel {
     *\param base base for the digit calculation
 	*\return constexpr int 
 	*/
-    template <std::integral _Num>
-    constexpr int numDigits(_Num num, std::size_t base = 10U)
+    template <std::integral T>
+    constexpr int numDigits(T num, std::size_t base = 10U)
     {
         //Hope computers can never represent integers with more than 2 billion digits ;)
         int digits = 0;
