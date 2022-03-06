@@ -214,6 +214,14 @@ namespace Raychel {
         return res;
     }
 
+    template <SignedArithmetic T, std::size_t N, typename Tag>
+    constexpr Tuple<T, N, Tag> operator-(const Tuple<T, N, Tag>& x)
+    {
+        auto res{x};
+        res *= -1;
+        return res;
+    }
+
     template <Arithmetic T, std::size_t N, typename Tag, TupleConvertable<Tag> Tag_>
     constexpr bool operator==(const Tuple<T, N, Tag>& a, const Tuple<T, N, Tag_>& b)
     {
