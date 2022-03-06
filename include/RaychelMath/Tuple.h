@@ -33,6 +33,7 @@
 
 #include <algorithm>
 #include <array>
+#include <iostream>
 #include <tuple>
 #include <utility>
 
@@ -181,6 +182,16 @@ namespace Raychel {
 
     template <Arithmetic T, std::size_t N>
     Tuple(std::array<T, N>) -> Tuple<T, N>;
+
+    template <Arithmetic T, std::size_t N, typename Tag>
+    inline std::ostream& operator<<(std::ostream& os, const Tuple<T, N, Tag>& obj)
+    {
+        os << '{';
+        for (const auto& elem : obj) {
+            os << elem << ", ";
+        }
+        return os << '}';
+    }
 
     template <Arithmetic T, std::size_t N, typename Tag, TupleConvertable<Tag> Tag_>
     constexpr Tuple<T, N, Tag> operator+(const Tuple<T, N, Tag>& a, const Tuple<T, N, Tag_>& b)
