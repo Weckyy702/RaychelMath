@@ -214,6 +214,23 @@ namespace Raychel {
         return res;
     }
 
+    template <Arithmetic T, std::size_t N, typename Tag, TupleConvertable<Tag> Tag_>
+    constexpr bool operator==(const Tuple<T, N, Tag>& a, const Tuple<T, N, Tag_>& b)
+    {
+        for (std::size_t i{0}; i != N; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    template <Arithmetic T, std::size_t N, typename Tag, TupleConvertable<Tag> Tag_>
+    constexpr bool operator!=(const Tuple<T, N, Tag>& a, const Tuple<T, N, Tag_>& b)
+    {
+        return !(a == b);
+    }
+
 } // namespace Raychel
 
 template <Raychel::Arithmetic T, std::size_t N, typename Tag>
