@@ -43,20 +43,20 @@ namespace Raychel {
     {};
 
     //Define this struct to allow conversion between custom tuples (see vec3 and color for reference)
-    template <typename ThisTag, typename OtherTag>
+    template <typename FromTag, typename ToTag>
     struct tuple_convertable : std::false_type
     {};
 
-    //A regular tuple can convert to any other tuple (TODO: should it?)
-    template <typename OtherTag>
-    struct tuple_convertable<TupleTag, OtherTag> : std::true_type
+    //Any type can convert into a regular tuple
+    template <typename FromTag>
+    struct tuple_convertable<FromTag, TupleTag> : std::true_type
     {};
 
-    template <typename ThisTag, typename OtherTag>
-    constexpr auto is_tuple_convertible_v = std::is_same_v<ThisTag, OtherTag> || tuple_convertable<ThisTag, OtherTag>::value;
+    template <typename FromTag, typename ToTag>
+    constexpr auto is_tuple_convertible_v = std::is_same_v<FromTag, ToTag> || tuple_convertable<FromTag, ToTag>::value;
 
-    template <typename OtherTag, typename ThisTag>
-    concept TupleConvertable = is_tuple_convertible_v<ThisTag, OtherTag>;
+    template <typename ToTag, typename FromTag>
+    concept TupleConvertable = is_tuple_convertible_v<FromTag, ToTag>;
 
     template <Arithmetic T, std::size_t N, typename Tag = TupleTag>
     requires(N != 0) class Tuple
