@@ -152,6 +152,26 @@ namespace Raychel {
             return *this;
         }
 
+        auto begin() noexcept
+        {
+            return data_.begin();
+        }
+
+        auto begin() const noexcept
+        {
+            return data_.begin();
+        }
+
+        auto end() noexcept
+        {
+            return data_.end();
+        }
+
+        auto end() const noexcept
+        {
+            return data_.end();
+        }
+
     private:
         std::array<T, N> data_;
     };
