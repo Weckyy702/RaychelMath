@@ -68,7 +68,7 @@ namespace Raychel {
         }
 
         template <std::convertible_to<T>... Us>
-        constexpr Tuple(Us&&... us) : data_{static_cast<T>(us)...}
+        constexpr explicit Tuple(Us&&... us) : data_{static_cast<T>(us)...}
         {}
 
         template <std::size_t N_>
@@ -173,7 +173,7 @@ namespace Raychel {
         }
 
     private:
-        std::array<T, N> data_;
+        std::array<T, N> data_{};
     };
 
     template <Arithmetic... Ts>
