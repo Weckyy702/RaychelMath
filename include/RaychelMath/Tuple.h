@@ -63,11 +63,6 @@ namespace Raychel {
     requires(N != 0) class Tuple
     {
     public:
-        constexpr explicit Tuple()
-        {
-            data_.fill(0);
-        }
-
         template <std::convertible_to<T>... Us>
         constexpr explicit Tuple(Us&&... us) : data_{static_cast<T>(us)...}
         {}
