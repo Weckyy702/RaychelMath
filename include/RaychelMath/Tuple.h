@@ -213,6 +213,12 @@ namespace Raychel {
     }
 
     template <Arithmetic T, std::size_t N, typename Tag, std::convertible_to<T> T_>
+    constexpr Tuple<T, N, Tag> operator*(T_ s, const Tuple<T, N, Tag>& x)
+    {
+        return x * s;
+    }
+
+    template <Arithmetic T, std::size_t N, typename Tag, std::convertible_to<T> T_>
     constexpr Tuple<T, N, Tag> operator/(const Tuple<T, N, Tag>& a, T_ s)
     {
         auto res{a};
