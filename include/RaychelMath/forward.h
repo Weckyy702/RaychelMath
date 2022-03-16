@@ -9,22 +9,15 @@
 namespace Raychel {
 
     template <Arithmetic T, std::size_t N, typename Tag>
-    struct Tuple;
+    requires(N != 0) class Tuple;
 
-    template <Arithmetic _number>
-    struct vec2Imp;
-
-    template <Arithmetic _number>
-    struct vec3Imp;
-
-    template <Arithmetic _number>
-    struct colorImp;
+    struct vec2Tag;
+    struct vec3Tag;
+    struct colorTag;
+    struct quaternionTag;
 
     template <std::floating_point _real>
-    struct QuaternionImp;
-
-    template <std::floating_point _real>
-    struct TransformImp;
+    struct transform;
 } // namespace Raychel
 
 #endif //!RAYCHEL_MATH_FORWARD_H

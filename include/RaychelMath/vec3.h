@@ -28,172 +28,77 @@
 #ifndef RAYCHEL_VEC3_H
 #define RAYCHEL_VEC3_H
 
-#include "forward.h"
+#include "Tuple.h"
+#include "math.h"
 
-//TODO: make all non-constexpr functions constexpr again once the compiler finds an answer to sqrt(x) at compile time
+#include <cmath>
 
 namespace Raychel {
 
-    /**
-	*\brief 3D vector
-	*
-	*\tparam _number Type of the vector. Must be arithmetic
-	*/
-    template <Arithmetic _number>
-    struct vec3Imp
+    struct Vec3Tag
+    {};
+    template <>
+    struct tuple_convertable<Vec3Tag, TupleTag> : std::true_type
+    {};
+
+    template <Arithmetic T>
+    using vec3 = Tuple<T, 3, Vec3Tag>;
+
+    template <Arithmetic T>
+    constexpr T dot(const vec3<T>& a, const vec3<T>& b) noexcept
     {
-        using value_type = std::remove_cvref_t<_number>;
-
-    private:
-        using vec2 = vec2Imp<value_type>;
-        using color = colorImp<value_type>;
-
-    public:
-        constexpr vec3Imp() noexcept = default;
-
-        explicit constexpr vec3Imp(value_type _x) noexcept : x(_x)
-        {}
-
-        constexpr vec3Imp(value_type _x, value_type _y) noexcept : x(_x), y(_y)
-        {}
-
-        constexpr vec3Imp(value_type _x, value_type _y, value_type _z) noexcept : x(_x), y(_y), z(_z)
-        {}
-
-        /**
-		*\brief Convert the vector to the same vector of another type
-		*
-		*\tparam To Type of the converted vector
-		*\return vec3Imp<To> 
-		*/
-        template <Arithmetic To>
-        constexpr vec3Imp<To> to() const noexcept;
-
-        constexpr explicit vec3Imp(const vec2&) noexcept;
-        constexpr explicit vec3Imp(const color&) noexcept;
-
-        constexpr vec3Imp& operator=(const vec2&) noexcept;
-        constexpr vec3Imp& operator=(const color&) noexcept;
-
-        constexpr vec3Imp& operator+=(const vec3Imp&) noexcept;
-        constexpr vec3Imp& operator-=(const vec3Imp&) noexcept;
-        constexpr vec3Imp& operator*=(value_type) noexcept;
-        constexpr vec3Imp& operator*=(const vec3Imp&) noexcept;
-        constexpr vec3Imp& operator/=(value_type) noexcept;
-        constexpr vec3Imp& operator/=(const vec3Imp&) noexcept;
-        constexpr vec3Imp& operator%=(const vec3Imp&) noexcept;
-
-        value_type x{0}, y{0}, z{0};
-    };
-
-    template <Arithmetic T>
-    std::ostream& operator<<(std::ostream&, const vec3Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator-(const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator+(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator-(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator*(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator*(const vec3Imp<T>&, T) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator*(T s, const vec3Imp<T>& v) noexcept
-    {
-        return v * s;
+        return (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2]);
     }
 
     template <Arithmetic T>
-    constexpr vec3Imp<T> operator/(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<T> operator/(const vec3Imp<T>&, T) noexcept;
-
-    //TODO: make these constexpr once the compiler finally finds a way to answer x % y at compile time
-    template <Arithmetic T>
-    vec3Imp<T> operator%(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    vec3Imp<T> operator%(const vec3Imp<T>&, T) noexcept;
-
-    template <Arithmetic T>
-    constexpr bool operator==(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr bool operator!=(const vec3Imp<T>& a, const vec3Imp<T>& b) noexcept
+    T mag(const vec3<T>& v) noexcept
     {
-        return !(a == b);
+        return static_cast<T>(std::sqrt(mag_sq(v)));
     }
 
     template <Arithmetic T>
-    constexpr vec3Imp<bool> operator<(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
+    constexpr T mag_sq(const vec3<T>& v) noexcept
+    {
+        return sq(v[0]) + sq(v[1]) + sq(v[2]);
+    }
 
     template <Arithmetic T>
-    constexpr vec3Imp<bool> operator<=(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
+    T dist(const vec3<T>& a, const vec3<T>& b) noexcept
+    {
+        return mag(a - b);
+    }
 
     template <Arithmetic T>
-    constexpr vec3Imp<bool> operator>(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr vec3Imp<bool> operator>=(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr T dot(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    //TODO: make this one constexpr aswell
-    template <Arithmetic T>
-    T mag(const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr T magSq(const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    T dist(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr T distSq(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    vec3Imp<T> max(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    vec3Imp<T> min(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
-
-    //normalizing vectors only makes sense for floating-point types
-    template <std::floating_point T>
-    vec3Imp<T> normalize(const vec3Imp<T>&) noexcept;
-
-    template <Arithmetic T>
-    requires std::is_signed_v<T> vec3Imp<T> abs(const vec3Imp<T>&)
-    noexcept;
+    constexpr T dist_sq(const vec3<T>& a, const vec3<T>& b) noexcept
+    {
+        return mag_sq(a - b);
+    }
 
     template <std::floating_point T>
-    vec3Imp<T> sin(const vec3Imp<T>&) noexcept;
+    vec3<T> normalize(const vec3<T>& v) noexcept
+    {
+        return v / mag(v);
+    }
 
-    template <std::floating_point T>
-    vec3Imp<T> cos(const vec3Imp<T>&) noexcept;
+    // clang-format off
 
     template <Arithmetic T>
-    constexpr vec3Imp<T> cross(const vec3Imp<T>&, const vec3Imp<T>&) noexcept;
+    constexpr vec3<T> cross(const vec3<T>& a, const vec3<T>& b) noexcept
+    {
+        return vec3<T> {
+            (a[1] * b[2]) - (a[2] * b[1]),
+            (a[2] * b[0]) - (a[0] * b[2]),
+            (a[0] * b[1]) - (a[1] * b[0])
+        };
+    }
 
-    /**
-	*\brief Linearly interpolate two vectors
-	*
-	*\tparam T Type of the vector
-	*\param a first vector (x=0.0)
-	*\param b second vector (x=1.0)
-	*\param x value of interpolation
-	*\return constexpr vec2Imp<T> 
-	*/
+    // clang-format on
+
     template <Arithmetic T>
-    constexpr vec3Imp<T> lerp(const vec3Imp<T>& a, const vec3Imp<T>& b, T) noexcept;
+    constexpr vec3<T> lerp(const vec3<T>& a, const vec3<T>& b, T x) noexcept
+    {
+        return (x * b) + ((1 - x) * a);
+    }
 
 } // namespace Raychel
 

@@ -28,7 +28,8 @@
 #ifndef RAYCHEL_VECTOR_H
 #define RAYCHEL_VECTOR_H
 
-#include <tuple>
+#include <array>
+#include "constants.h"
 #include "vec3.h"
 
 namespace Raychel {
@@ -39,10 +40,14 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3Imp<T> 
+	*\return vec3<T> 
 	*/
-    template <std::floating_point T>
-    vec3Imp<T> rotate_x(const vec3Imp<T>& v, T) noexcept;
+    template <Arithmetic T>
+    vec3<T> rotate_x(const vec3<T>& v, T theta) noexcept
+    {
+        using std::sin, std::cos;
+        return {v[0], v[1] * cos(theta) - v[2] * sin(theta), v[1] * sin(theta) + v[2] * cos(theta)};
+    }
 
     /**
 	*\brief Rotate the vector theta radians around positive Y
@@ -50,10 +55,14 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3Imp<T> 
+	*\return vec3<T> 
 	*/
     template <std::floating_point T>
-    vec3Imp<T> rotate_y(const vec3Imp<T>& v, T) noexcept;
+    vec3<T> rotate_y(const vec3<T>& v, T theta) noexcept
+    {
+        using std::sin, std::cos;
+        return {v[0] * cos(theta) + v[2] * sin(theta), v[1], -v[0] * sin(theta) + v[2] * cos(theta)};
+    }
 
     /**
 	*\brief Rotate the vector theta radians around positive Z
@@ -61,10 +70,14 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3Imp<T> 
+	*\return vec3<T> 
 	*/
     template <std::floating_point T>
-    vec3Imp<T> rotate_z(const vec3Imp<T>& v, T) noexcept;
+    vec3<T> rotate_z(const vec3<T>& v, T theta) noexcept
+    {
+        using std::sin, std::cos;
+        return {v.x * cos(theta) - v.y * sin(theta), v.x * sin(theta) + v.y * cos(theta), v.z};
+    }
     /**
 	*\brief Reflect vector along normal
 	*
@@ -74,7 +87,11 @@ namespace Raychel {
 	*\return vec3 the reflected vector
 	*/
     template <std::floating_point T>
-    constexpr vec3Imp<T> reflect(const vec3Imp<T>& dir, const vec3Imp<T>& normal) noexcept;
+    constexpr vec3<T> reflect(const vec3<T>& direction, const vec3<T>& normal) noexcept
+    {
+        RAYCHEL_ASSERT_NORMALIZED(direction);
+        return direction - (normal * T(dot(direction, normal) * 2.0));
+    }
 
     /**
     * \brief Get the tangent to normal
@@ -84,7 +101,14 @@ namespace Raychel {
     * \return
     */
     template <std::floating_point T>
-    vec3Imp<T> get_tangent(const vec3Imp<T>& normal) noexcept;
+    vec3<T> get_tangent(const vec3<T>& normal) noexcept
+    {
+        auto tangent = vec3<T>{normal[2], normal[2], -normal[0] - normal[1]};
+        if (mag_sq(tangent) == 0) {
+            tangent = vec3<T>{-normal[1] - normal[2], normal[0], normal[0]};
+        }
+        return normalize(tangent);
+    }
 
     /**
     * \brief Get the basis vectors around normal
@@ -94,7 +118,13 @@ namespace Raychel {
     * \return +x, +y, +z axis as a tuple
     */
     template <std::floating_point T>
-    std::tuple<vec3Imp<T>, vec3Imp<T>, vec3Imp<T>> get_basis_vectors(const vec3Imp<T>& normal) noexcept;
+    std::array<vec3<T>, 3> get_basis_vectors(const vec3<T>& normal) noexcept
+    {
+        const auto j = normalize(normal);
+        const auto k = get_tangent(j);
+        const auto i = cross(j, k);
+        return {i, j, k};
+    }
 
     /**
     * \brief Get a random direction on the hemisphere around normal
@@ -105,9 +135,15 @@ namespace Raychel {
     * \param rng random number generator used to generate the distribution
     * \return  
     */
-    template <
-        std::floating_point T, std::floating_point RNG_t, std::floating_point = std::enable_if_t<std::is_invocable_r_v<T, RNG_t>>>
-    vec3Imp<T> get_random_direction_on_hemisphere(const vec3Imp<T>& normal, const RNG_t&) noexcept;
+    template <std::floating_point T, std::invocable RNG_t>
+    vec3<T> get_random_direction_on_hemisphere(const vec3<T>& normal, const RNG_t& rng) noexcept
+    {
+        auto test = normalize(vec3<T>{rng(), rng(), rng()});
+        if (dot(test, normal) < 0) {
+            test *= -1;
+        }
+        return test;
+    }
 
     /**
     * \brief Get a random direction on a cone angle
@@ -120,7 +156,21 @@ namespace Raychel {
     * \return  
     */
     template <std::floating_point T, std::invocable RNG_t>
-    vec3Imp<T> get_random_direction_on_cone_angle(const vec3Imp<T>& normal, T half_cone_angle, const RNG_t& rng) noexcept;
+    vec3<T> get_random_direction_on_cone_angle(const vec3<T>& normal, T half_cone_angle, const RNG_t& rng) noexcept
+    {
+        using std::sin, std::cos;
+        if (half_cone_angle != 0) {
+            half_cone_angle = std::clamp<T>(half_cone_angle, 0, half_pi<T>);
+            const auto theta = rng() * half_cone_angle;
+            const auto phi = rng() * pi_v<T>;
+
+            const auto [i, j, k] = get_basis_vectors(normal);
+
+            return normalize((i * sin(theta) * sin(phi)) + (j * cos(theta)) + (k * cos(phi) * sin(theta)));
+        }
+        return normal;
+    }
+
 } // namespace Raychel
 
 #endif //!RAYCHEL_VECTOR_H
