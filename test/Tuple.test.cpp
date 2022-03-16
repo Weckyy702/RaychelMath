@@ -13,12 +13,8 @@
 
 struct OtherTupleTag
 {};
-
-//OtherTupleTag -> Raychel::TupleTag is allowed
-template <>
-struct Raychel::tuple_convertable<OtherTupleTag, Raychel::TupleTag> : std::true_type
-{};
-//Raychel::TupleTag -> OtherTupleTag is implicitly allowed
+//OtherTupleTag -> Raychel::TupleTag is implicitly allowed
+//Raychel::TupleTag -> OtherTupleTag is not allowed
 
 //clang-format doesn't like these macros
 // clang-format off
@@ -33,9 +29,23 @@ RAYCHEL_BEGIN_TEST("Creating tuples", "[RaychelMath][Tuple]")
     }
 
     {
-        constexpr Tuple<TestType, 3> t{12U, -5L, 9ULL};
+        constexpr Tuple<TestType, 3> t{1};
+        REQUIRE(t[0] == 1);
+        REQUIRE(t[1] == 0);
+        REQUIRE(t[2] == 0);
+    }
+
+    {
+        constexpr Tuple<TestType, 3> t{1, 2};
+        REQUIRE(t[0] == 1);
+        REQUIRE(t[1] == 2);
+        REQUIRE(t[2] == 0);
+    }
+
+    {
+        constexpr Tuple<TestType, 3> t{12U, static_cast<TestType>(-5L), 9ULL};
         REQUIRE(t[0] == 12);
-        REQUIRE(t[1] == -5);
+        REQUIRE(t[1] == static_cast<TestType>(-5L));
         REQUIRE(t[2] == 9);
     }
 
@@ -67,6 +77,17 @@ TEST_CASE("Tuple structured bindings", "[RaychelMath][Tuple]")
     REQUIRE(x == 12);
     REQUIRE(y == 19.5);
     REQUIRE(z == -7);
+}
+
+TEST_CASE("Iterating tuples", "[RaychelMath][Tuple]")
+{
+    constexpr std::array values{12, 19, -7};
+    constexpr Raychel::Tuple t{values};
+
+    auto it = values.begin();
+    for(const auto elem : t) {
+        REQUIRE(elem == *(it++));
+    }
 }
 
 RAYCHEL_BEGIN_TEST("Adding tuples", "[RaychelMath][Tuple]")
