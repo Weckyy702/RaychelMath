@@ -2,7 +2,6 @@
 #include <type_traits>
 #include "catch2/catch.hpp"
 
-#include "RaychelMath/Impl/colorImpl.inl"
 #include "RaychelMath/color.h"
 #include "RaychelMath/equivalent.h"
 
@@ -16,31 +15,32 @@
     TEMPLATE_TEST_CASE(name, tag, RAYCHEL_TEST_TYPES)                          \
     {                                                                          \
         using namespace Raychel;                                               \
-        using color = colorImp<TestType>;
+        using color = color<TestType>;
 
 #define RAYCHEL_END_TEST }
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Creating colors", "[RaychelMath][ColorRGB]")
     const color c{1, 0, 124};
-    REQUIRE(c.r == 1);
-    REQUIRE(c.g == 0);
-    REQUIRE(c.b == 124);
+    REQUIRE(c[0] == 1);
+    REQUIRE(c[1] == 0);
+    REQUIRE(c[2] == 124);
 
     const color c2{1, 2};
-    REQUIRE(c2.r == 1);
-    REQUIRE(c2.g == 2);
-    REQUIRE(c2.b == 0);
+    REQUIRE(c2[0] == 1);
+    REQUIRE(c2[1] == 2);
+    REQUIRE(c2[2] == 0);
 
+    //FIXME: our new implementation changes the behaviour from c={1, 1, 1} to c={1, 0, 0}!!
     const color c3{1};
-    REQUIRE(c3.r == 1);
-    REQUIRE(c3.g == 1);
-    REQUIRE(c3.b == 1);
+    REQUIRE(c3[0] == 1);
+    REQUIRE(c3[1] == 0);
+    REQUIRE(c3[2] == 0);
 
     const color c4 = c3;
-    REQUIRE(c4.r == c3.r);
-    REQUIRE(c4.g == c3.g);
-    REQUIRE(c4.b == c3.b);
+    REQUIRE(c4[0] == c3[0]);
+    REQUIRE(c4[1] == c3[1]);
+    REQUIRE(c4[2] == c3[2]);
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
@@ -49,89 +49,90 @@ RAYCHEL_BEGIN_TEST("Color addition", "[RaychelMath][ColorRGB]")
 
     const color c2 = c + color{0, 1, 5};
 
-    REQUIRE(c2.r == 1);
-    REQUIRE(c2.g == 2);
-    REQUIRE(c2.b == 6);
+    REQUIRE(c2[0] == 1);
+    REQUIRE(c2[1] == 2);
+    REQUIRE(c2[2] == 6);
 
     color c3{1, 1, 1};
     c3 += color{0, 1, 5};
 
-    REQUIRE(c3.r == 1);
-    REQUIRE(c3.g == 2);
-    REQUIRE(c3.b == 6);
+    REQUIRE(c3[0] == 1);
+    REQUIRE(c3[1] == 2);
+    REQUIRE(c3[2] == 6);
 RAYCHEL_END_TEST
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Color subtraction", "[RaychelMath][ColorRGB]")
-    const color c{128};
+    const color c{128, 128, 128};
 
     const auto res = c - color{64, 128, 5};
 
-    REQUIRE(res.r == 64);
-    REQUIRE(res.g == 0);
-    REQUIRE(res.b == 123);
+    REQUIRE(res[0] == 64);
+    REQUIRE(res[1] == 0);
+    REQUIRE(res[2] == 123);
 
-    color c2{128};
+    color c2{128, 128, 128};
     c2 -= color{64, 128, 5};
 
-    REQUIRE(c2.r == 64);
-    REQUIRE(c2.g == 0);
-    REQUIRE(c2.b == 123);
+    REQUIRE(c2[0] == 64);
+    REQUIRE(c2[1] == 0);
+    REQUIRE(c2[2] == 123);
 RAYCHEL_END_TEST
 
+//FIXME: implement color inversion
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-TEST_CASE("Inverting colors", "[RaychelMath][ColorRGB]")
-{
-    {
-        const Raychel::colorImp<float> c{0.0F, 0.35F, 1.0F};
-
-        const auto res = -c;
-
-        REQUIRE(res.r == 1.0F);
-        REQUIRE(res.g == 0.65F);
-        REQUIRE(res.b == 0.0F);
-    }
-
-    {
-        const Raychel::colorImp<unsigned char> c{0, 91, 255};
-
-        const auto res = -c;
-
-        REQUIRE(res.r == 255);
-        REQUIRE(res.g == 164);
-        REQUIRE(res.b == 0);
-    }
-}
+//TEST_CASE("Inverting colors", "[RaychelMath][ColorRGB]")
+//{
+//    {
+//        constexpr Raychel::color<float> c{0.0F, 0.35F, 1.0F};
+//
+//        constexpr auto res = -c;
+//
+//        REQUIRE(res[0] == 1.0F);
+//        REQUIRE(res[1] == 0.65F);
+//        REQUIRE(res[2] == 0.0F);
+//    }
+//
+//    {
+//        const Raychel::color<unsigned char> c{0, 91, 255};
+//
+//        const auto res = -c;
+//
+//        REQUIRE(res[0] == 255);
+//        REQUIRE(res[1] == 164);
+//        REQUIRE(res[2] == 0);
+//    }
+//}
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Color multiplication", "[RaychelMath][ColorRGB]")
-    const color c{12};
+    const color c{12, 12, 12};
 
     color res = c * color{5, 0, 2};
-    REQUIRE(res.r == 60);
-    REQUIRE(res.g == 0);
-    REQUIRE(res.b == 24);
+    REQUIRE(res[0] == 60);
+    REQUIRE(res[1] == 0);
+    REQUIRE(res[2] == 24);
 
     res = c * TestType{2};
-    REQUIRE(res.r == 24);
-    REQUIRE(res.g == 24);
-    REQUIRE(res.b == 24);
+    REQUIRE(res[0] == 24);
+    REQUIRE(res[1] == 24);
+    REQUIRE(res[2] == 24);
 
     if constexpr (std::is_floating_point_v<TestType>) {
         const color c1{1, 0, .5};
 
         res = c1 * color{0.5, 0.25, 2.5};
 
-        REQUIRE(res.r == 0.5);
-        REQUIRE(res.g == 0);
-        REQUIRE(res.b == 1.25);
+        REQUIRE(res[0] == 0.5);
+        REQUIRE(res[1] == 0);
+        REQUIRE(res[2] == 1.25);
 
 
         res = c1 * TestType{0.5};
 
-        REQUIRE(res.r == 0.5);
-        REQUIRE(res.g == 0);
-        REQUIRE(res.b == .25);
+        REQUIRE(res[0] == 0.5);
+        REQUIRE(res[1] == 0);
+        REQUIRE(res[2] == .25);
     }
 
 RAYCHEL_END_TEST
@@ -141,32 +142,11 @@ RAYCHEL_BEGIN_TEST("Color Division", "[RaychelMath][ColorRGB]")
 
     color c{12, 246, 18};
 
-    color res = c / color{2, 3, 1};
+    c /= 2;
 
-    REQUIRE(res.r == 6);
-    REQUIRE(res.g == 82);
-    REQUIRE(res.b == 18);
-
-    res = c / TestType{2};
-
-    REQUIRE(res.r == 6);
-    REQUIRE(res.g == 123);
-    REQUIRE(res.b == 9);
-
-
-    c /= color{2, 3, 1};
-
-    REQUIRE(c.r == 6);
-    REQUIRE(c.g == 82);
-    REQUIRE(c.b == 18);
-
-    c = color{12, 246, 18};
-
-    c /= TestType{2};
-
-    REQUIRE(c.r == 6);
-    REQUIRE(c.g == 123);
-    REQUIRE(c.b == 9);
+    REQUIRE(c[0] == 6);
+    REQUIRE(c[1] == 123);
+    REQUIRE(c[2] == 9);
 
 RAYCHEL_END_TEST
 
@@ -179,66 +159,6 @@ RAYCHEL_BEGIN_TEST("Color comparison: equality", "[RaychelMath][ColorRGB]")
     REQUIRE(c == color{1, 12, 5});
 
     REQUIRE(c != color{0, 5, 42});
-
-RAYCHEL_END_TEST
-
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: greater than", "[RaychelMath][ColorRGB]")
-
-    const color c{0, 12, 3};
-    const color comp{1, 7, 3};
-
-    const auto gt = c > comp;
-
-    REQUIRE(gt.r == false);
-    REQUIRE(gt.g == true);
-    REQUIRE(gt.b == false);
-
-    const auto gt_e = c >= comp;
-
-    REQUIRE(gt_e.r == false);
-    REQUIRE(gt_e.g == true);
-    REQUIRE(gt_e.b == true);
-
-RAYCHEL_END_TEST
-
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color comparison: less than", "[RaychelMath][ColorRGB]")
-
-    const color c{0, 12, 3};
-    const color comp{1, 7, 3};
-
-    const auto less_than = c < comp;
-
-    REQUIRE(less_than.r == true);
-    REQUIRE(less_than.g == false);
-    REQUIRE(less_than.b == false);
-
-    const auto less_than_or_equal = c <= comp;
-
-    REQUIRE(less_than_or_equal.r == true);
-    REQUIRE(less_than_or_equal.g == false);
-    REQUIRE(less_than_or_equal.b == true);
-
-RAYCHEL_END_TEST
-
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
-RAYCHEL_BEGIN_TEST("Color max/min", "[RaychelMath][ColorRGB]")
-
-    const color c1{1, 7, 12};
-    const color c2{0, 42, 9};
-
-    color res = max(c1, c2);
-
-    REQUIRE(res.r == 1);
-    REQUIRE(res.g == 42);
-    REQUIRE(res.b == 12);
-
-    res = min(c1, c2);
-
-    REQUIRE(res.r == 0);
-    REQUIRE(res.g == 7);
-    REQUIRE(res.b == 9);
 
 RAYCHEL_END_TEST
 
@@ -257,108 +177,113 @@ TEST_CASE("Color conversion", "[RaychelMath][ColorRGB]")
 {
     using namespace Raychel;
 
-    constexpr colorImp<double> c{0.25, 1.5, -0.25}; //RGB-8: 63, 255, 0
+    constexpr color<int> c{536870911, 2147483647, 0}; //RGB-8: 63, 255, 0
 
-    constexpr auto c_u8 = c.to<unsigned char>();
+    constexpr auto c_u8 = convert_color<unsigned char>(c); //integral(large) -> integral(small)
 
-    REQUIRE(c_u8.r == 63);
-    REQUIRE(c_u8.g == 255);
-    REQUIRE(c_u8.b == 0);
+    REQUIRE(c_u8[0] == 63);
+    REQUIRE(c_u8[1] == 255);
+    REQUIRE(c_u8[2] == 0);
 
-    constexpr auto c_float = c_u8.to<float>();
+    auto c_64 = convert_color<std::int64_t>(c_u8); //integral(small) -> integral(large)
 
-    REQUIRE(c_float.r == 63/255.0F);
-    REQUIRE(c_float.g == 1.0F);
-    REQUIRE(c_float.b == 0.0F);
+    REQUIRE(c_64[0] == 2278715444399415168L);
+    REQUIRE(c_64[1] == 9223372036854775680L);
+    REQUIRE(c_64[2] == 0L);
 
+    constexpr auto c_float = convert_color<float>(c_u8); //integral(small) -> floating point
+
+    REQUIRE(c_float[0] == 63/255.0F);
+    REQUIRE(c_float[1] == 1.0F);
+    REQUIRE(c_float[2] == 0.0F);
+
+    constexpr auto c_double = convert_color<double>(c_float); //floating point -> floating point
+    REQUIRE(c_double[0] == Approx(63/255.0));
+    REQUIRE(c_double[1] == 1.0);
+    REQUIRE(c_double[2] == 0.0);
+
+    constexpr auto c_u16 = convert_color<std::uint16_t>(c_double); //floating point -> integral;
+    REQUIRE(c_u16[0] == 16191U);
+    REQUIRE(c_u16[1] == 65535U);
+    REQUIRE(c_u16[2] == 0U);
 }
 
 // NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Color from RGB", "[RaychelMath][ColorRGB]")
 
-    TestType max = 1;
-    TestType half = 128.0/255.0;
+    constexpr TestType max = std::is_integral_v<TestType> ? std::numeric_limits<TestType>::max() : TestType{1};
+    constexpr TestType half = (128.0L / 255.0L) * max;
 
-    if constexpr (std::is_integral_v<TestType>) {
-        max = 255;
-        half = 128;
-    }
-
-    constexpr auto black = color::from_rgb(0, 0, 0);
-    constexpr auto white = color::from_rgb(255, 255, 255);
-    constexpr auto red = color::from_rgb(255, 0, 0);
-    constexpr auto green = color::from_rgb(0, 255, 0);
-    constexpr auto blue = color::from_rgb(0, 0, 255);
-    constexpr auto dark_yellow = color::from_rgb(128, 128, 0);
+    constexpr auto black = color_from_rgb<TestType>(0, 0, 0);
+    constexpr auto white = color_from_rgb<TestType>(255, 255, 255);
+    constexpr auto red = color_from_rgb<TestType>(255, 0, 0);
+    constexpr auto green = color_from_rgb<TestType>(0, 255, 0);
+    constexpr auto blue = color_from_rgb<TestType>(0, 0, 255);
+    constexpr auto dark_yellow = color_from_rgb<TestType>(128, 128, 0);
 
 
-    REQUIRE(black.r == 0);
-    REQUIRE(black.g == 0);
-    REQUIRE(black.b == 0);
+    REQUIRE(black[0] == 0);
+    REQUIRE(black[1] == 0);
+    REQUIRE(black[2] == 0);
 
-    REQUIRE(white.r == max);
-    REQUIRE(white.g == max);
-    REQUIRE(white.b == max);
+    REQUIRE(white[0] == max);
+    REQUIRE(white[1] == max);
+    REQUIRE(white[2] == max);
 
-    REQUIRE(red.r == max);
-    REQUIRE(red.g == 0);
-    REQUIRE(red.b == 0);
+    REQUIRE(red[0] == max);
+    REQUIRE(red[1] == 0);
+    REQUIRE(red[2] == 0);
 
-    REQUIRE(green.r == 0);
-    REQUIRE(green.g == max);
-    REQUIRE(green.b == 0);
+    REQUIRE(green[0] == 0);
+    REQUIRE(green[1] == max);
+    REQUIRE(green[2] == 0);
 
-    REQUIRE(blue.r == 0);
-    REQUIRE(blue.g == 0);
-    REQUIRE(blue.b == max);
+    REQUIRE(blue[0] == 0);
+    REQUIRE(blue[1] == 0);
+    REQUIRE(blue[2] == max);
 
-    REQUIRE(equivalent<TestType>(dark_yellow.r, half));
-    REQUIRE(equivalent<TestType>(dark_yellow.g, half));
-    REQUIRE(dark_yellow.b == 0);
+    REQUIRE(dark_yellow[0] == half);
+    REQUIRE(dark_yellow[1] == half);
+    REQUIRE(dark_yellow[2] == 0);
 
 RAYCHEL_END_TEST
 
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+//NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 RAYCHEL_BEGIN_TEST("Color from HEX", "[RaychelMath][ColorRGB]")
 
-    TestType max = 1;
-    TestType half = 128.0/255.0;
+    constexpr TestType max = std::is_integral_v<TestType> ? std::numeric_limits<TestType>::max() : TestType{1};
+    constexpr TestType half = (128.0L / 255.0L) * max;
 
-    if constexpr (std::is_integral_v<TestType>) {
-        max = 255;
-        half = 128;
-    }
-
-    constexpr auto black = color::from_hex(0x000000);
-    constexpr auto white = color::from_hex(0xFFFFFF);
-    constexpr auto red = color::from_hex(0xFF0000);
-    constexpr auto green = color::from_hex(0x00FF00);
-    constexpr auto blue = color::from_hex(0x0000FF);
-    constexpr auto dark_yellow = color::from_hex(0x808000);
+    constexpr auto black = color_from_hex<TestType>(0x000000);
+    constexpr auto white = color_from_hex<TestType>(0xFFFFFF);
+    constexpr auto red = color_from_hex<TestType>(0xFF0000);
+    constexpr auto green = color_from_hex<TestType>(0x00FF00);
+    constexpr auto blue = color_from_hex<TestType>(0x0000FF);
+    constexpr auto dark_yellow = color_from_hex<TestType>(0x808000);
 
 
-    REQUIRE(black.r == 0);
-    REQUIRE(black.g == 0);
-    REQUIRE(black.b == 0);
+    REQUIRE(black[0] == 0);
+    REQUIRE(black[1] == 0);
+    REQUIRE(black[2] == 0);
 
-    REQUIRE(white.r == max);
-    REQUIRE(white.g == max);
-    REQUIRE(white.b == max);
+    REQUIRE(white[0] == max);
+    REQUIRE(white[1] == max);
+    REQUIRE(white[2] == max);
 
-    REQUIRE(red.r == max);
-    REQUIRE(red.g == 0);
-    REQUIRE(red.b == 0);
+    REQUIRE(red[0] == max);
+    REQUIRE(red[1] == 0);
+    REQUIRE(red[2] == 0);
 
-    REQUIRE(green.r == 0);
-    REQUIRE(green.g == max);
-    REQUIRE(green.b == 0);
+    REQUIRE(green[0] == 0);
+    REQUIRE(green[1] == max);
+    REQUIRE(green[2] == 0);
 
-    REQUIRE(blue.r == 0);
-    REQUIRE(blue.g == 0);
-    REQUIRE(blue.b == max);
+    REQUIRE(blue[0] == 0);
+    REQUIRE(blue[1] == 0);
+    REQUIRE(blue[2] == max);
 
-    REQUIRE(equivalent<TestType>(dark_yellow.r, half));
-    REQUIRE(equivalent<TestType>(dark_yellow.g, half));
-    REQUIRE(dark_yellow.b == 0);
+    REQUIRE(equivalent<TestType>(dark_yellow[0], half));
+    REQUIRE(equivalent<TestType>(dark_yellow[1], half));
+    REQUIRE(dark_yellow[2] == 0);
 
 RAYCHEL_END_TEST

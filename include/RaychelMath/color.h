@@ -28,145 +28,110 @@
 #ifndef RAYCHEL_COLOR_H
 #define RAYCHEL_COLOR_H
 
-#include "forward.h"
+#include "Tuple.h"
 
+#include <limits>
+#include <ratio>
+#include <numeric>
 namespace Raychel {
 
-    /**
-	*\brief RGB color value
-	*
-	*\tparam _number Type of color value. Must be arithmetic
-	*/
-    template <Arithmetic _number>
-    struct colorImp
+    struct ColorTag
+    {};
+
+    template<Arithmetic T>
+    using color = Tuple<T, 3, ColorTag>;
+
+    template <Arithmetic T>
+    constexpr color<T>& operator*=(color<T>& a, const color<T>& b)
     {
-        using value_type = std::remove_cvref_t<_number>;
-
-    private:
-        using vec3 = vec3Imp<value_type>;
-        using vec2 = vec2Imp<value_type>;
-
-    public:
-        constexpr colorImp() noexcept = default;
-
-        constexpr explicit colorImp(value_type _b) noexcept : r(_b), g(_b), b(_b)
-        {}
-
-        constexpr colorImp(value_type _r, value_type _g) noexcept : r(_r), g(_g), b(0)
-        {}
-
-        constexpr colorImp(value_type _r, value_type _g, value_type _b) noexcept : r(_r), g(_g), b(_b)
-        {}
-
-        /**
-		*\brief Convert the color to another color of type To. The color will be clamped before conversion
-		*
-		*\tparam To Type of the converted color
-		*\return colorImp<_To> 
-		*/
-        template <Arithmetic To>
-        constexpr colorImp<To> to() const noexcept;
-
-        /**
-		*\brief Convert the color to a pointer-to-red. For functions that need colors as arrays
-		*
-		*\return const value_type* the value array in RGB order
-		*/
-        constexpr explicit operator const value_type*() const noexcept;
-
-        constexpr explicit colorImp(const vec3&) noexcept;
-        constexpr explicit colorImp(const vec2&) noexcept;
-
-        constexpr colorImp& operator=(const vec3&) noexcept;
-        constexpr colorImp& operator=(const vec2&) noexcept;
-
-        constexpr colorImp& operator+=(const colorImp&) noexcept;
-        constexpr colorImp& operator-=(const colorImp&) noexcept;
-        constexpr colorImp& operator*=(value_type) noexcept;
-        constexpr colorImp& operator*=(const colorImp&) noexcept;
-        constexpr colorImp& operator/=(const colorImp&) noexcept;
-        constexpr colorImp& operator/=(value_type) noexcept;
-
-        /**
-        * \brief create color from 8-bit RGB values
-        * 
-        * \param r red value [0-255]
-        * \param g green value [0-255]
-        * \param b blue value [0-255]
-        * \return colorImp
-        */
-        static constexpr colorImp from_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b) noexcept;
-
-        /**
-        * \brief create color from 24-bit HEX value
-        * 
-        * \param hex hex value in the format xxRRGGBB
-        * \return colorImp
-        */
-        static constexpr colorImp from_hex(std::uint32_t hex) noexcept;
-
-        value_type r{0}, g{0}, b{0};
-    };
-
-    template <Arithmetic T>
-    std::ostream& operator<<(std::ostream& os, const colorImp<T>& c);
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator-(const colorImp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator+(const colorImp<T>&, const colorImp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator-(const colorImp<T>&, const colorImp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator*(const colorImp<T>&, const colorImp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator*(const colorImp<T>&, T) noexcept;
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator*(T s, const colorImp<T>& v) noexcept
-    {
-        return v * s;
+        for (std::size_t i{0}; i != 3; ++i) {
+            a[i] = a[i] * b[i];
+        }
+        return a;
     }
 
-    template <Arithmetic T>
-    constexpr colorImp<T> operator/(const colorImp<T>&, const colorImp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr colorImp<T> operator/(const colorImp<T>&, T) noexcept;
-
-    template <Arithmetic T>
-    constexpr bool operator==(const colorImp<T>&, const colorImp<T>&) noexcept;
-
-    template <Arithmetic T>
-    constexpr bool operator!=(const colorImp<T>& a, const colorImp<T>& b) noexcept
+    template<Arithmetic T>
+    constexpr color<T> operator*(const color<T>& a, const color<T>& b)
     {
-        return !(a == b);
+        auto res{a};
+        res *= b;
+        return res;
     }
 
-    template <Arithmetic T>
-    constexpr colorImp<bool> operator<(const colorImp<T>&, const colorImp<T>&) noexcept;
+    template<Arithmetic T>
+    constexpr T brightness(const color<T>& c)
+    {
+        return (c[0] + c[1] + c[2]) / 3;
+    }
 
-    template <Arithmetic T>
-    constexpr colorImp<bool> operator<=(const colorImp<T>&, const colorImp<T>&) noexcept;
+    namespace details
+    {
+        template<std::integral From, std::integral To>
+        constexpr color<To> convert_color_helper(const color<From>& c)
+        {
+            using Int = std::common_type_t<From, To>;
 
-    template <Arithmetic T>
-    constexpr colorImp<bool> operator>(const colorImp<T>&, const colorImp<T>&) noexcept;
+            constexpr auto to_max = std::numeric_limits<To>::max();
+            constexpr auto from_max = std::numeric_limits<From>::max();
 
-    template <Arithmetic T>
-    constexpr colorImp<bool> operator>=(const colorImp<T>&, const colorImp<T>&) noexcept;
+            if constexpr(to_max > from_max) {
+                constexpr To ratio = to_max / from_max;
+                return color<To>{static_cast<To>(c[0]) * ratio, static_cast<To>(c[1]) * ratio, static_cast<To>(c[2]) * ratio};
+            }
+            //TODO: find a better way to dodge lossy floating point arithmetic
+            constexpr auto ratio = static_cast<double>(to_max) / from_max;
+            return color<To>{static_cast<To>(c[0] * ratio), static_cast<To>(c[1] * ratio), static_cast<To>(c[2] * ratio)};
+       }
 
-    template <Arithmetic T>
-    constexpr colorImp<T> max(const colorImp<T>&, const colorImp<T>&) noexcept;
+        template<std::floating_point From, std::floating_point To>
+        constexpr color<To> convert_color_helper(const color<From>& c)
+        {
+            return color<To>{c[0], c[1], c[2]};
+        }
 
-    template <Arithmetic T>
-    constexpr colorImp<T> min(const colorImp<T>&, const colorImp<T>&) noexcept;
+        template<std::floating_point From, std::integral To>
+        constexpr color<To> convert_color_helper(const color<From>& c)
+        {
+            using std::clamp;
+            constexpr auto max = std::numeric_limits<To>::max();
+            return color<To>{clamp<From>(c[0], 0, 1) * max, clamp<From>(c[1], 0, 1) * max, clamp<From>(c[2], 0, 1) * max};
+        }
 
-    template <Arithmetic T>
-    constexpr T brightness(const colorImp<T>&) noexcept;
+        template<std::integral From, std::floating_point To>
+        constexpr color<To> convert_color_helper(const color<From>& c)
+        {
+            constexpr auto max = static_cast<To>(std::numeric_limits<From>::max());
+            return color<To>{static_cast<To>(c[0]) / max, static_cast<To>(c[1]) / max, static_cast<To>(c[2]) / max};
+        }
+    }
+
+
+    template<Arithmetic To, std::convertible_to<To> From>
+    constexpr color<To> convert_color(const color<From>& c)
+    {
+        if constexpr(std::is_same_v<From, To>) {
+            return c;
+        }
+        return details::convert_color_helper<From, To>(c);
+    }
+
+    template<Arithmetic T>
+    constexpr color<T> color_from_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)
+    {
+        return convert_color<T>(color<std::uint8_t>{r, g, b});
+    }
+
+    template<Arithmetic T>
+    constexpr color<T> color_from_hex(std::uint32_t hex)
+    {
+        using u8 = std::uint8_t;
+        const u8 r = (hex >> 16)    & 0xFFU;
+        const u8 g = (hex >> 8)     & 0xFFU;
+        const u8 b =  hex           & 0xFFU;
+
+        return convert_color<T>(color<u8>{r, g, b});
+    }
+
 } // namespace Raychel
 
 #endif /*!RAYCHEL_COLOR_H*/
