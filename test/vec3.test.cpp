@@ -71,7 +71,7 @@ RAYCHEL_BEGIN_TEST("Vector dot product", "[RaychelMath][Vector3]")
 
 RAYCHEL_END_TEST
 
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+
 RAYCHEL_BEGIN_TEST("Vector magnitude", "[RaychelMath][Vector3]")
 
     //the zero vector has magnitude 0
@@ -106,7 +106,7 @@ RAYCHEL_BEGIN_TEST("Vector magnitude", "[RaychelMath][Vector3]")
 
 RAYCHEL_END_TEST
 
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+
 TEMPLATE_TEST_CASE("Vector normalization", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
@@ -132,7 +132,7 @@ TEMPLATE_TEST_CASE("Vector normalization", "[RaychelMath][Vector3]", RAYCHEL_VEC
 
 }
 
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+
 RAYCHEL_BEGIN_TEST("Vector distance", "[RaychelMath][Vector3]")
 
     const vec3 a{12, 4, 7};
@@ -162,7 +162,6 @@ RAYCHEL_BEGIN_TEST("Vector distance", "[RaychelMath][Vector3]")
         REQUIRE(d == 29);
     }
 
-    //NOLINTEXTLINE: clang-tidy gets really confused by these ifs
     if constexpr(std::is_floating_point_v<TestType>)
     {
         const vec3 b{27, 4, 9};
@@ -174,7 +173,7 @@ RAYCHEL_BEGIN_TEST("Vector distance", "[RaychelMath][Vector3]")
 
 RAYCHEL_END_TEST
 
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+
 RAYCHEL_BEGIN_TEST("Vector squared distance", "[RaychelMath][Vector3]")
 
     const vec3 a{12, 4, 7};
@@ -204,7 +203,7 @@ RAYCHEL_BEGIN_TEST("Vector squared distance", "[RaychelMath][Vector3]")
         REQUIRE(d == 841);
     }
 
-    //NOLINTNEXTLINE: clang-tidy doesn't like this file :(
+
     {
         const vec3 b{27, 4, 9};
 
@@ -215,7 +214,6 @@ RAYCHEL_BEGIN_TEST("Vector squared distance", "[RaychelMath][Vector3]")
 
 RAYCHEL_END_TEST
 
-// NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
 TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
