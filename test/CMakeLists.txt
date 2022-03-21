@@ -14,6 +14,7 @@ list(APPEND RAYCHELMATH_TEST_SOURCES
     "color.test.cpp"
     "Tuple.test.cpp"
     "vec3.test.cpp"
+    "vec2.test.cpp"
     "main.test.cpp"
 )
 
