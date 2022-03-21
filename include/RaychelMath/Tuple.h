@@ -182,10 +182,10 @@ namespace Raychel {
     inline std::ostream& operator<<(std::ostream& os, const Tuple<T, N, Tag>& obj)
     {
         os << '{';
-        for (const auto& elem : obj) {
-            os << elem << ", ";
+        for (std::size_t i{0}; i != N-1; ++i) {
+            os << obj[i] << ", ";
         }
-        return os << '}';
+        return os << obj[N-1] << '}';
     }
 
     template <Arithmetic T, std::size_t N, typename Tag, TupleConvertable<Tag> Tag_>
