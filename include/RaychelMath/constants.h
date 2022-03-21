@@ -34,17 +34,20 @@
 namespace Raychel {
     using namespace std::numbers;
 
-    template <std::floating_point _real>
-    constexpr auto half_pi = pi_v<_real> / 2;
+    template<std::floating_point Real>
+    constexpr auto pi = pi_v<Real>;
 
-    template <std::floating_point _real>
-    constexpr auto quarter_pi = pi_v<_real> / 4;
+    template <std::floating_point Real>
+    constexpr auto half_pi = pi_v<Real> / 2;
 
-    template <std::floating_point _real>
-    constexpr auto deg_to_rad = pi_v<_real> / 180;
+    template <std::floating_point Real>
+    constexpr auto quarter_pi = pi_v<Real> / 4;
 
-    template <std::floating_point _real>
-    constexpr auto rad_to_deg = 180 / pi_v<_real>;
+    template <std::floating_point Real>
+    constexpr auto deg_to_rad = pi_v<Real> / 180;
+
+    template <std::floating_point Real>
+    constexpr auto rad_to_deg = 180 / pi_v<Real>;
 
 } // namespace Raychel
 
