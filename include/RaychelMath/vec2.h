@@ -28,151 +28,56 @@
 #ifndef RAYCHEL_VEC2_H
 #define RAYCHEL_VEC2_H
 
+#include "Tuple.h"
 #include "forward.h"
-
+#include "math.h"
 namespace Raychel {
 
-    /**
-	*\brief 2D vector
-	*
-	*\tparam _number Type of the vector. Must be arithmetic
-	*/
-    template <Arithmetic _number>
-    struct vec2Imp
+    struct vec2Tag
+    {};
+
+    template <Arithmetic T>
+    using vec2 = Tuple<T, 2, vec2Tag>;
+
+    template <>
+    struct tuple_convertable<vec2Tag, vec3Tag> : std::true_type
+    {};
+
+    template <Arithmetic T>
+    constexpr T dot(const vec2<T>& a, const vec2<T>& b)
     {
-        using value_type = std::remove_cvref_t<_number>;
-
-    private:
-        using vec3 = vec3Imp<value_type>;
-        using color = colorImp<value_type>;
-
-    public:
-        constexpr vec2Imp() = default;
-
-        explicit constexpr vec2Imp(value_type _x) : x(_x), y(0)
-        {}
-
-        constexpr vec2Imp(value_type _x, value_type _y) : x(_x), y(_y)
-        {}
-
-        /**
-		*\brief Convert the vector to another vector
-		*
-		*\tparam To Type of the converted vector
-		*\return vec2Imp<To> 
-		*/
-        template <Arithmetic To>
-        constexpr vec2Imp<To> to() const;
-
-        explicit constexpr vec2Imp(const vec3&);
-        explicit constexpr vec2Imp(const color&);
-
-        constexpr vec2Imp& operator=(const vec3&);
-        constexpr vec2Imp& operator=(const color&);
-
-        constexpr vec2Imp& operator+=(const vec2Imp&);
-        constexpr vec2Imp& operator-=(const vec2Imp&);
-        constexpr vec2Imp& operator*=(value_type);
-        constexpr vec2Imp& operator*=(const vec2Imp&);
-        constexpr vec2Imp& operator/=(value_type);
-        constexpr vec2Imp& operator/=(const vec2Imp&);
-        vec2Imp& operator%=(const vec2Imp&);
-
-        value_type x{0}, y{0};
-    };
-
-    template <Arithmetic T>
-    std::ostream& operator<<(std::ostream&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator-(const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator+(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator-(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator*(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator*(const vec2Imp<T>&, T);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator*(T s, const vec2Imp<T>& v)
-    {
-        return v * s;
+        return a[0] * b[0] + a[1] * b[1];
     }
 
     template <Arithmetic T>
-    constexpr vec2Imp<T> operator/(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<T> operator/(const vec2Imp<T>&, T);
-
-    template <Arithmetic T>
-    vec2Imp<T> operator%(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr bool operator==(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr bool operator!=(const vec2Imp<T>& a, const vec2Imp<T>& b)
+    T mag(const vec2<T>& v)
     {
-        return !(a == b);
+        return std::sqrt(mag_sq(v));
     }
 
     template <Arithmetic T>
-    constexpr vec2Imp<bool> operator<(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<bool> operator<=(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<bool> operator>(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr vec2Imp<bool> operator>=(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr T dot(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    T mag(const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr T magSq(const vec2Imp<T>&);
+    constexpr T mag_sq(const vec2<T>& v)
+    {
+        return sq(v[0]) + sq(v[1]);
+    }
 
     template <std::floating_point T>
-    vec2Imp<T> normalize(const vec2Imp<T>&);
+    vec2<T> normalize(const vec2<T>& v)
+    {
+        return v / mag(v);
+    }
 
     template <Arithmetic T>
-    vec2Imp<T> abs(const vec2Imp<T>&);
+    T dist(const vec2<T>& a, const vec2<T>& b)
+    {
+        return mag(a - b);
+    }
 
     template <Arithmetic T>
-    vec2Imp<T> max(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    vec2Imp<T> min(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    vec2Imp<T> sin(const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    vec2Imp<T> cos(const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    vec2Imp<T> pow(const vec2Imp<T>&, T);
-
-    template <Arithmetic T>
-    vec2Imp<T> pow(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    T dist(const vec2Imp<T>&, const vec2Imp<T>&);
-
-    template <Arithmetic T>
-    constexpr T distSq(const vec2Imp<T>&, const vec2Imp<T>&);
+    constexpr T dist_sq(const vec2<T>& a, const vec2<T>& b)
+    {
+        return mag_sq(a - b);
+    }
 
     /**
 	*\brief Rotate the 2D vector
@@ -182,8 +87,12 @@ namespace Raychel {
 	*\param theta Angle to rotate by. Must be in radians
 	*\return vec2Imp<T> 
 	*/
-    template <Arithmetic T>
-    vec2Imp<T> rotate(const vec2Imp<T>& v, T theta);
+    template <std::floating_point T, std::convertible_to<T> T_>
+    vec2<T> rotate(const vec2<T>& v, T_ theta)
+    {
+        using std::sin, std::cos;
+        return vec2<T>{v[0] * cos(theta) - v[1] * sin(theta), v[0] * sin(theta) + v[1] * sin(theta)};
+    }
 
     /**
 	*\brief Linearly interpolate two vectors
@@ -194,8 +103,8 @@ namespace Raychel {
 	*\param x value of interpolation
 	*\return constexpr vec2Imp<T> 
 	*/
-    template <Arithmetic T>
-    constexpr vec2Imp<T> lerp(const vec2Imp<T>& a, const vec2Imp<T>& b, long double x)
+    template <Arithmetic T, std::convertible_to<T> T_>
+    constexpr vec2<T> lerp(const vec2<T>& a, const vec2<T>& b, T_ x)
     {
         return (x * b) + ((1.0 - x) * a);
     }
