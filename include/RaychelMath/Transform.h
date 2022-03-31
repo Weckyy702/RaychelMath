@@ -39,41 +39,18 @@ namespace Raychel {
     *
     *\tparam _number Type of the Transform. Must be arithmetic
     */
-    template <std::floating_point _real>
-    struct TransformImp
+    template <Arithmetic T>
+    struct Transform
     {
-        using value_type = std::remove_cvref_t<_real>;
-
-    private:
-        using vec3 = vec3Imp<value_type>;
-        using Quaternion = QuaternionImp<value_type>;
-
-    public:
-        constexpr TransformImp() = default;
-
-        constexpr explicit TransformImp(const vec3& pos) : position{pos}, rotation{}
-        {}
-
-        constexpr explicit TransformImp(const Quaternion& rot) : position{}, rotation{rot}
-        {}
-
-        constexpr TransformImp(const vec3& pos, const Quaternion& rot) : position{pos}, rotation(rot)
-        {}
-
-        [[nodiscard]] constexpr vec3 apply(const vec3&) const noexcept;
-
-        /**
-        *\brief Convert the transform to another transform of type To
-        *
-        *\tparam To Type of the converted Transform
-        *\return TransformImp<T> 
-        */
-        template <std::floating_point To>
-        constexpr TransformImp<To> to() const noexcept;
-
-        vec3 position;
-        Quaternion rotation;
+        vec3<T> position{};
+        Quaternion<T> rotation{};
     };
+
+    template <Arithmetic T>
+    constexpr auto apply(const Transform<T>& t, const vec3<T>& v)
+    {
+        return (p - t.offset) * t.rotation;
+    }
 
 } // namespace Raychel
 

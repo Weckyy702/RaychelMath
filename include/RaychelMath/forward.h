@@ -41,7 +41,7 @@ namespace Raychel {
     struct colorTag;
     struct QuaternionTag;
 
-    template <std::floating_point _real>
+    template <Arithmetic T>
     struct transform;
 } // namespace Raychel
 
