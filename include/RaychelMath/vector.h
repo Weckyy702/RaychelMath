@@ -43,10 +43,10 @@ namespace Raychel {
 	*\return vec3<T> 
 	*/
     template <Arithmetic T>
-    vec3<T> rotate_x(const vec3<T>& v, T theta) noexcept
+    constexpr vec3<T> rotate_x(const vec3<T>& v, T theta) noexcept
     {
         using std::sin, std::cos;
-        return {v[0], v[1] * cos(theta) - v[2] * sin(theta), v[1] * sin(theta) + v[2] * cos(theta)};
+        return vec3<T>{v[0], v[1] * cos(theta) - v[2] * sin(theta), v[1] * sin(theta) + v[2] * cos(theta)};
     }
 
     /**
@@ -58,10 +58,10 @@ namespace Raychel {
 	*\return vec3<T> 
 	*/
     template <std::floating_point T>
-    vec3<T> rotate_y(const vec3<T>& v, T theta) noexcept
+    constexpr vec3<T> rotate_y(const vec3<T>& v, T theta) noexcept
     {
         using std::sin, std::cos;
-        return {v[0] * cos(theta) + v[2] * sin(theta), v[1], -v[0] * sin(theta) + v[2] * cos(theta)};
+        return vec3<T>{v[0] * cos(theta) + v[2] * sin(theta), v[1], -v[0] * sin(theta) + v[2] * cos(theta)};
     }
 
     /**
@@ -73,10 +73,10 @@ namespace Raychel {
 	*\return vec3<T> 
 	*/
     template <std::floating_point T>
-    vec3<T> rotate_z(const vec3<T>& v, T theta) noexcept
+    constexpr vec3<T> rotate_z(const vec3<T>& v, T theta) noexcept
     {
         using std::sin, std::cos;
-        return {v.x * cos(theta) - v.y * sin(theta), v.x * sin(theta) + v.y * cos(theta), v.z};
+        return vec3<T>{v[0] * cos(theta) - v[1] * sin(theta), v[0] * sin(theta) + v[1] * cos(theta), v[2]};
     }
     /**
 	*\brief Reflect vector along normal
