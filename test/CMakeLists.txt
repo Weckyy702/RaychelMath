@@ -8,15 +8,7 @@ if(NOT RAYCHEL_LOGGER_EXTERNAL)
     find_package(RaychelLogger REQUIRED)
 endif()
 
-#file(GLOB_RECURSE RAYCHELMATH_TEST_SOURCES "*.test.cpp")
-
-list(APPEND RAYCHELMATH_TEST_SOURCES
-    "color.test.cpp"
-    "Tuple.test.cpp"
-    "vec3.test.cpp"
-    "vec2.test.cpp"
-    "main.test.cpp"
-)
+file(GLOB_RECURSE RAYCHELMATH_TEST_SOURCES "*.test.cpp")
 
 add_executable(RaychelMath_test
     ${RAYCHELMATH_TEST_SOURCES}
