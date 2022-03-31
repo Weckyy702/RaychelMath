@@ -77,6 +77,7 @@ namespace Raychel {
     template <std::floating_point T>
     vec3<T> normalize(const vec3<T>& v) noexcept
     {
+        RAYCHEL_ASSERT(v != vec3<T>{});
         return v / mag(v);
     }
 
