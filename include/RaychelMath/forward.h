@@ -39,7 +39,7 @@ namespace Raychel {
     struct vec2Tag;
     struct vec3Tag;
     struct colorTag;
-    struct quaternionTag;
+    struct QuaternionTag;
 
     template <std::floating_point _real>
     struct transform;
