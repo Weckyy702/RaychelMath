@@ -42,12 +42,12 @@ namespace Raychel {
     {};
 
     template <Arithmetic T>
-    using Quaternion = Tuple<T, 4, QuaternionTag>;
+    using basic_quaternion = Tuple<T, 4, QuaternionTag>;
 
     template <Arithmetic T, std::convertible_to<T> T_>
-    constexpr Quaternion<T> rotate_around(const vec3<T>& _axis, T_ angle_in_rads)
+    constexpr basic_quaternion<T> rotate_around(const basic_vec3<T>& _axis, T_ angle_in_rads)
     {
-        RAYCHEL_ASSERT(_axis != vec3<T>{});
+        RAYCHEL_ASSERT(_axis != basic_vec3<T>{});
         const auto half_angle = angle_in_rads / 2;
 
         const auto s = std::sin(half_angle);
@@ -58,17 +58,17 @@ namespace Raychel {
         const auto j = axis[1] * s;
         const auto k = axis[2] * s;
 
-        return Quaternion<T>{r, i, j, k};
+        return basic_quaternion<T>{r, i, j, k};
     }
 
     template <Arithmetic T>
-    constexpr vec3<T> v(const Quaternion<T>& q)
+    constexpr basic_vec3<T> v(const basic_quaternion<T>& q)
     {
         return {q[1], q[2], q[3]};
     }
 
     template <Arithmetic T>
-    constexpr Quaternion<T>& operator*=(Quaternion<T>& a, const Quaternion<T>& b)
+    constexpr basic_quaternion<T>& operator*=(basic_quaternion<T>& a, const basic_quaternion<T>& b)
     {
         const auto r = a[0];
         const auto i = a[1];
@@ -84,13 +84,13 @@ namespace Raychel {
     }
 
     template <Arithmetic T>
-    constexpr Quaternion<T>& operator/=(Quaternion<T>& a, const Quaternion<T>& b)
+    constexpr basic_quaternion<T>& operator/=(basic_quaternion<T>& a, const basic_quaternion<T>& b)
     {
         return a *= inverse(b);
     }
 
     template <Arithmetic T>
-    constexpr auto operator*(const Quaternion<T>& a, const Quaternion<T>& b)
+    constexpr auto operator*(const basic_quaternion<T>& a, const basic_quaternion<T>& b)
     {
         auto q{a};
         q *= b;
@@ -98,12 +98,12 @@ namespace Raychel {
     }
 
     template <Arithmetic T>
-    constexpr auto operator*(const vec3<T>& v, const Quaternion<T>& _q)
+    constexpr auto operator*(const basic_vec3<T>& v, const basic_quaternion<T>& _q)
     {
-        RAYCHEL_ASSERT(_q != Quaternion<T>{});
+        RAYCHEL_ASSERT(_q != basic_quaternion<T>{});
         const auto q = normalize(_q);
 
-        //following is the expanded and somewhat optimized version of q * p * q^-1 with p = QuaternionImp{0.0, v[0], v.y, v.z}
+        //following is the expanded and somewhat optimized version of q * p * q^-1 with p = basic_quaternionImp{0.0, v[0], v.y, v.z}
         const auto r = q[1] * v[0] + q[2] * v[1] + q[3] * v[2];
         const auto i = q[0] * v[0] + q[2] * v[2] - q[3] * v[1];
         const auto j = q[0] * v[1] - q[1] * v[2] + q[3] * v[0];
@@ -113,53 +113,53 @@ namespace Raychel {
         const auto y = r * q[2] + i * q[3] + j * q[0] - k * q[1];
         const auto z = r * q[3] - i * q[2] + j * q[1] + k * q[0];
 
-        return vec3<T>{x, y, z};
+        return basic_vec3<T>{x, y, z};
     }
 
     template <Arithmetic T>
-    constexpr auto operator/(const Quaternion<T>& a, const Quaternion<T>& b)
+    constexpr auto operator/(const basic_quaternion<T>& a, const basic_quaternion<T>& b)
     {
         return a * inverse(b);
     }
 
     template <Arithmetic T>
-    constexpr T dot(const Quaternion<T>& a, const Quaternion<T>& b)
+    constexpr T dot(const basic_quaternion<T>& a, const basic_quaternion<T>& b)
     {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
     }
 
     template <Arithmetic T>
-    constexpr T mag_sq(const Quaternion<T>& q)
+    constexpr T mag_sq(const basic_quaternion<T>& q)
     {
         return sq(q[0]) + sq(q[1]) + sq(q[2]) + sq(q[3]);
     }
 
     template <Arithmetic T>
-    constexpr T mag(const Quaternion<T>& q)
+    constexpr T mag(const basic_quaternion<T>& q)
     {
         return std::sqrt(mag_sq(q));
     }
 
     template <Arithmetic T>
-    constexpr auto normalize(const Quaternion<T>& q)
+    constexpr auto normalize(const basic_quaternion<T>& q)
     {
         return q / mag(q);
     }
 
     template <Arithmetic T>
-    constexpr auto conjugate(const Quaternion<T>& q)
+    constexpr auto conjugate(const basic_quaternion<T>& q)
     {
-        return Quaternion<T>{q[0], -q[1], -q[2], -q[3]};
+        return basic_quaternion<T>{q[0], -q[1], -q[2], -q[3]};
     }
 
     template <Arithmetic T>
-    constexpr auto inverse(const Quaternion<T>& q)
+    constexpr auto inverse(const basic_quaternion<T>& q)
     {
         return conjugate(q) / mag_sq(q);
     }
 
     template <std::floating_point T, std::convertible_to<T> T_>
-    constexpr Quaternion<T> lerp(const Quaternion<T>& _a, const Quaternion<T>& _b, T_ x)
+    constexpr basic_quaternion<T> lerp(const basic_quaternion<T>& _a, const basic_quaternion<T>& _b, T_ x)
     {
         constexpr T threshold{0.995}; //TODO: make this adjustable
 
@@ -189,7 +189,7 @@ namespace Raychel {
     }
 
     template<Arithmetic T>
-    constexpr Quaternion<T> look_at(const vec3<T>& old_forward, const vec3<T>& new_forward)
+    constexpr basic_quaternion<T> look_at(const basic_vec3<T>& old_forward, const basic_vec3<T>& new_forward)
     {
         constexpr T threshold = 0.9998;
 

@@ -13,8 +13,8 @@
     TEMPLATE_TEST_CASE(test_name, test_tag, RAYCHEL_QUATERNION_TEST_TYPES)                                                       \
     {                                                                                                                            \
         using namespace Raychel;                                                                                                 \
-        using Quaternion = Quaternion<TestType>;                                                                              \
-        using vec3 = vec3<TestType>;
+        using Quaternion = basic_quaternion<TestType>;                                                                              \
+        using vec3 = basic_vec3<TestType>;
 
 #define RAYCHEL_END_TEST }
 
@@ -47,13 +47,13 @@ RAYCHEL_BEGIN_TEST("Creating Quaternions", "[RaychelMath][Quaternion]")
     REQUIRE(c[3] == 0);
 
     REQUIRE(equivalent<TestType>(d[0], one_over_sqrt2));
-    REQUIRE(equivalent<TestType>(d[1], 0.5)); 
-    REQUIRE(d[2] == 0); 
+    REQUIRE(equivalent<TestType>(d[1], 0.5));
+    REQUIRE(d[2] == 0);
     REQUIRE(equivalent<TestType>(d[3], 0.5));
 
     REQUIRE(equivalent<TestType>(e[0], cos_eighth_pi));
-    REQUIRE(equivalent<TestType>(e[1], -.36 * sin_eighth_pi)); 
-    REQUIRE(equivalent<TestType>(e[2], .48 * sin_eighth_pi)); 
+    REQUIRE(equivalent<TestType>(e[1], -.36 * sin_eighth_pi));
+    REQUIRE(equivalent<TestType>(e[2], .48 * sin_eighth_pi));
     REQUIRE(equivalent<TestType>(e[3], .8 * sin_eighth_pi));
 
 RAYCHEL_END_TEST
@@ -207,7 +207,7 @@ RAYCHEL_END_TEST
 
 
 RAYCHEL_BEGIN_TEST("Quaternion division: Quaternion", "[RaychelMath][Quaternion]")
-    
+
     Quaternion q{12, -4.5, -6, 9};
     const Quaternion b{1, 2, 3, 4};
 
