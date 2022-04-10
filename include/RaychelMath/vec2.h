@@ -37,44 +37,44 @@ namespace Raychel {
     {};
 
     template <Arithmetic T>
-    using vec2 = Tuple<T, 2, vec2Tag>;
+    using basic_vec2 = Tuple<T, 2, vec2Tag>;
 
     template <>
     struct tuple_convertable<vec2Tag, vec3Tag> : std::true_type
     {};
 
     template <Arithmetic T>
-    constexpr T dot(const vec2<T>& a, const vec2<T>& b)
+    constexpr T dot(const basic_vec2<T>& a, const basic_vec2<T>& b)
     {
         return a[0] * b[0] + a[1] * b[1];
     }
 
     template <Arithmetic T>
-    T mag(const vec2<T>& v)
+    T mag(const basic_vec2<T>& v)
     {
         return std::sqrt(mag_sq(v));
     }
 
     template <Arithmetic T>
-    constexpr T mag_sq(const vec2<T>& v)
+    constexpr T mag_sq(const basic_vec2<T>& v)
     {
         return sq(v[0]) + sq(v[1]);
     }
 
     template <std::floating_point T>
-    vec2<T> normalize(const vec2<T>& v)
+    basic_vec2<T> normalize(const basic_vec2<T>& v)
     {
         return v / mag(v);
     }
 
     template <Arithmetic T>
-    T dist(const vec2<T>& a, const vec2<T>& b)
+    T dist(const basic_vec2<T>& a, const basic_vec2<T>& b)
     {
         return mag(a - b);
     }
 
     template <Arithmetic T>
-    constexpr T dist_sq(const vec2<T>& a, const vec2<T>& b)
+    constexpr T dist_sq(const basic_vec2<T>& a, const basic_vec2<T>& b)
     {
         return mag_sq(a - b);
     }
@@ -85,13 +85,13 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec2Imp<T> 
+	*\return basic_vec2Imp<T>
 	*/
     template <std::floating_point T, std::convertible_to<T> T_>
-    vec2<T> rotate(const vec2<T>& v, T_ theta)
+    basic_vec2<T> rotate(const basic_vec2<T>& v, T_ theta)
     {
         using std::sin, std::cos;
-        return vec2<T>{v[0] * cos(theta) - v[1] * sin(theta), v[0] * sin(theta) + v[1] * sin(theta)};
+        return basic_vec2<T>{v[0] * cos(theta) - v[1] * sin(theta), v[0] * sin(theta) + v[1] * sin(theta)};
     }
 
     /**
@@ -101,10 +101,10 @@ namespace Raychel {
 	*\param a first vector (x=0.0)
 	*\param b second vector (x=1.0)
 	*\param x value of interpolation
-	*\return constexpr vec2Imp<T> 
+	*\return constexpr basic_vec2Imp<T>
 	*/
     template <Arithmetic T, std::convertible_to<T> T_>
-    constexpr vec2<T> lerp(const vec2<T>& a, const vec2<T>& b, T_ x)
+    constexpr basic_vec2<T> lerp(const basic_vec2<T>& a, const basic_vec2<T>& b, T_ x)
     {
         return (x * b) + ((1.0 - x) * a);
     }

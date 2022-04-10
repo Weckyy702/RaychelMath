@@ -20,7 +20,7 @@
     TEMPLATE_TEST_CASE(test_name, test_tag, RAYCHEL_VEC2_TEST_TYPES)           \
     {                                                                          \
         using namespace Raychel;                                               \
-        using vec2 = vec2<TestType>;
+        using vec2 = basic_vec2<TestType>;
 
 #define RAYCHEL_END_TEST }
 
@@ -63,7 +63,7 @@ RAYCHEL_END_TEST
 TEMPLATE_TEST_CASE("vec2 normalization", "[RaychelMath][Vector2]", RAYCHEL_VEC2_FLOATING_TYPES)
 {
     using namespace Raychel;
-    using vec2 = vec2<TestType>;
+    using vec2 = basic_vec2<TestType>;
 
     const TestType inv_sqrt_2 = 1.0 / std::sqrt(2.0);
 
@@ -108,7 +108,7 @@ RAYCHEL_END_TEST
 
 TEMPLATE_TEST_CASE("vec2 rotation", "[RaychelMath][Vector2]", RAYCHEL_VEC2_FLOATING_TYPES)
 {
-    using vec2 = Raychel::vec2<TestType>;
+    using vec2 = Raychel::basic_vec2<TestType>;
     constexpr auto pi = Raychel::pi<TestType>;
     constexpr auto half_pi = Raychel::half_pi<TestType>;
 
