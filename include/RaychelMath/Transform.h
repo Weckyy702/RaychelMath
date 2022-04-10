@@ -40,14 +40,14 @@ namespace Raychel {
     *\tparam _number Type of the Transform. Must be arithmetic
     */
     template <Arithmetic T>
-    struct Transform
+    struct basic_transform
     {
         vec3<T> position{};
         Quaternion<T> rotation{};
     };
 
     template <Arithmetic T>
-    constexpr auto apply(const Transform<T>& t, const vec3<T>& v)
+    constexpr auto apply(const basic_transform<T>& t, const basic_transform<T>& v)
     {
         return (p - t.offset) * t.rotation;
     }
