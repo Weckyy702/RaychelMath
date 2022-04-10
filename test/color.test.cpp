@@ -15,7 +15,7 @@
     TEMPLATE_TEST_CASE(name, tag, RAYCHEL_TEST_TYPES)                          \
     {                                                                          \
         using namespace Raychel;                                               \
-        using color = color<TestType>;
+        using color = basic_color<TestType>;
 
 #define RAYCHEL_END_TEST }
 
@@ -177,7 +177,7 @@ TEST_CASE("Color conversion", "[RaychelMath][ColorRGB]")
 {
     using namespace Raychel;
 
-    constexpr color<int> c{536870911, 2147483647, 0}; //RGB-8: 63, 255, 0
+    constexpr basic_color<int> c{536870911, 2147483647, 0}; //RGB-8: 63, 255, 0
 
     constexpr auto c_u8 = convert_color<unsigned char>(c); //integral(large) -> integral(small)
 

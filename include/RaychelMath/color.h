@@ -39,10 +39,10 @@ namespace Raychel {
     {};
 
     template <Arithmetic T>
-    using color = Tuple<T, 3, ColorTag>;
+    using basic_color = Tuple<T, 3, ColorTag>;
 
     template <Arithmetic T>
-    constexpr color<T>& operator*=(color<T>& a, const color<T>& b)
+    constexpr basic_color<T>& operator*=(basic_color<T>& a, const basic_color<T>& b)
     {
         for (std::size_t i{0}; i != 3; ++i) {
             a[i] = a[i] * b[i];
@@ -51,7 +51,7 @@ namespace Raychel {
     }
 
     template <Arithmetic T>
-    constexpr color<T> operator*(const color<T>& a, const color<T>& b)
+    constexpr basic_color<T> operator*(const basic_color<T>& a, const basic_color<T>& b)
     {
         auto res{a};
         res *= b;
@@ -59,14 +59,14 @@ namespace Raychel {
     }
 
     template <Arithmetic T>
-    constexpr T brightness(const color<T>& c)
+    constexpr T brightness(const basic_color<T>& c)
     {
         return (c[0] + c[1] + c[2]) / 3;
     }
 
     namespace details {
         template <std::integral From, std::integral To>
-        constexpr color<To> convert_color_helper(const color<From>& c)
+        constexpr basic_color<To> convert_color_helper(const basic_color<From>& c)
         {
             using Int = std::common_type_t<From, To>;
 
@@ -75,37 +75,37 @@ namespace Raychel {
 
             if constexpr (to_max > from_max) {
                 constexpr To ratio = to_max / from_max;
-                return color<To>{static_cast<To>(c[0]) * ratio, static_cast<To>(c[1]) * ratio, static_cast<To>(c[2]) * ratio};
+                return basic_color<To>{static_cast<To>(c[0]) * ratio, static_cast<To>(c[1]) * ratio, static_cast<To>(c[2]) * ratio};
             }
             //TODO: find a better way to dodge lossy floating point arithmetic
             constexpr auto ratio = static_cast<double>(to_max) / from_max;
-            return color<To>{static_cast<To>(c[0] * ratio), static_cast<To>(c[1] * ratio), static_cast<To>(c[2] * ratio)};
+            return basic_color<To>{static_cast<To>(c[0] * ratio), static_cast<To>(c[1] * ratio), static_cast<To>(c[2] * ratio)};
         }
 
         template <std::floating_point From, std::floating_point To>
-        constexpr color<To> convert_color_helper(const color<From>& c)
+        constexpr basic_color<To> convert_color_helper(const basic_color<From>& c)
         {
-            return color<To>{c[0], c[1], c[2]};
+            return basic_color<To>{c[0], c[1], c[2]};
         }
 
         template <std::floating_point From, std::integral To>
-        constexpr color<To> convert_color_helper(const color<From>& c)
+        constexpr basic_color<To> convert_color_helper(const basic_color<From>& c)
         {
             using std::clamp;
             constexpr auto max = std::numeric_limits<To>::max();
-            return color<To>{clamp<From>(c[0], 0, 1) * max, clamp<From>(c[1], 0, 1) * max, clamp<From>(c[2], 0, 1) * max};
+            return basic_color<To>{clamp<From>(c[0], 0, 1) * max, clamp<From>(c[1], 0, 1) * max, clamp<From>(c[2], 0, 1) * max};
         }
 
         template <std::integral From, std::floating_point To>
-        constexpr color<To> convert_color_helper(const color<From>& c)
+        constexpr basic_color<To> convert_color_helper(const basic_color<From>& c)
         {
             constexpr auto max = static_cast<To>(std::numeric_limits<From>::max());
-            return color<To>{static_cast<To>(c[0]) / max, static_cast<To>(c[1]) / max, static_cast<To>(c[2]) / max};
+            return basic_color<To>{static_cast<To>(c[0]) / max, static_cast<To>(c[1]) / max, static_cast<To>(c[2]) / max};
         }
     } // namespace details
 
     template <Arithmetic To, std::convertible_to<To> From>
-    constexpr color<To> convert_color(const color<From>& c)
+    constexpr basic_color<To> convert_color(const basic_color<From>& c)
     {
         if constexpr (std::is_same_v<From, To>) {
             return c;
@@ -114,20 +114,20 @@ namespace Raychel {
     }
 
     template <Arithmetic T>
-    constexpr color<T> color_from_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)
+    constexpr basic_color<T> color_from_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)
     {
-        return convert_color<T>(color<std::uint8_t>{r, g, b});
+        return convert_color<T>(basic_color<std::uint8_t>{r, g, b});
     }
 
     template <Arithmetic T>
-    constexpr color<T> color_from_hex(std::uint32_t hex)
+    constexpr basic_color<T> color_from_hex(std::uint32_t hex)
     {
         using u8 = std::uint8_t;
         const u8 r = (hex >> 16) & 0xFFU;
         const u8 g = (hex >> 8) & 0xFFU;
         const u8 b = hex & 0xFFU;
 
-        return convert_color<T>(color<u8>{r, g, b});
+        return convert_color<T>(basic_color<u8>{r, g, b});
     }
 
 } // namespace Raychel
