@@ -19,7 +19,7 @@
 TEMPLATE_TEST_CASE("Vector rotate: x", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
-    using vec3 = vec3<TestType>;
+    using vec3 = basic_vec3<TestType>;
 
     const vec3 v{4, 1, 0};
     const vec3 v2{4, 1, 2};
@@ -49,7 +49,7 @@ TEMPLATE_TEST_CASE("Vector rotate: x", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FL
 TEMPLATE_TEST_CASE("Vector rotation: y", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
-    using vec3 = vec3<TestType>;
+    using vec3 = basic_vec3<TestType>;
 
     const vec3 v{1, 4, 0};
     const vec3 v2{4, 1 ,2};
@@ -79,7 +79,7 @@ TEMPLATE_TEST_CASE("Vector rotation: y", "[RaychelMath][Vector3]", RAYCHEL_VEC3_
 TEMPLATE_TEST_CASE("Vector rotation: z", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
-    using vec3 = vec3<TestType>;
+    using vec3 = basic_vec3<TestType>;
 
     const vec3 v{1, 4, 0};
     const vec3 v2{4, 1 ,2};
@@ -95,7 +95,7 @@ TEMPLATE_TEST_CASE("Vector rotation: z", "[RaychelMath][Vector3]", RAYCHEL_VEC3_
     REQUIRE(equivalent<TestType>(r[1], 4));
     REQUIRE(equivalent<TestType>(r[2], 2));
 
-    
+
 
 
     const vec3 v3{12, 7, 9};

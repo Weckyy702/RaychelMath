@@ -3,7 +3,7 @@
 * \author Weckyy702 (weckyy702@gmail.com)
 * \brief Additional vector functions for RaychelMath
 * \date 2021-07-07
-* 
+*
 * MIT License
 * Copyright (c) [2021] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -12,10 +12,10 @@
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in all
 * copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,7 +23,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-* 
+*
 */
 #ifndef RAYCHEL_VECTOR_H
 #define RAYCHEL_VECTOR_H
@@ -40,13 +40,13 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3<T> 
+	*\return basic_vec3<T>
 	*/
     template <Arithmetic T>
-    constexpr vec3<T> rotate_x(const vec3<T>& v, T theta) noexcept
+    constexpr basic_vec3<T> rotate_x(const basic_vec3<T>& v, T theta) noexcept
     {
         using std::sin, std::cos;
-        return vec3<T>{v[0], v[1] * cos(theta) - v[2] * sin(theta), v[1] * sin(theta) + v[2] * cos(theta)};
+        return basic_vec3<T>{v[0], v[1] * cos(theta) - v[2] * sin(theta), v[1] * sin(theta) + v[2] * cos(theta)};
     }
 
     /**
@@ -55,13 +55,13 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3<T> 
+	*\return basic_vec3<T>
 	*/
     template <std::floating_point T>
-    constexpr vec3<T> rotate_y(const vec3<T>& v, T theta) noexcept
+    constexpr basic_vec3<T> rotate_y(const basic_vec3<T>& v, T theta) noexcept
     {
         using std::sin, std::cos;
-        return vec3<T>{v[0] * cos(theta) + v[2] * sin(theta), v[1], -v[0] * sin(theta) + v[2] * cos(theta)};
+        return basic_vec3<T>{v[0] * cos(theta) + v[2] * sin(theta), v[1], -v[0] * sin(theta) + v[2] * cos(theta)};
     }
 
     /**
@@ -70,13 +70,13 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param v Vector to rotate
 	*\param theta Angle to rotate by. Must be in radians
-	*\return vec3<T> 
+	*\return basic_vec3<T>
 	*/
     template <std::floating_point T>
-    constexpr vec3<T> rotate_z(const vec3<T>& v, T theta) noexcept
+    constexpr basic_vec3<T> rotate_z(const basic_vec3<T>& v, T theta) noexcept
     {
         using std::sin, std::cos;
-        return vec3<T>{v[0] * cos(theta) - v[1] * sin(theta), v[0] * sin(theta) + v[1] * cos(theta), v[2]};
+        return basic_vec3<T>{v[0] * cos(theta) - v[1] * sin(theta), v[0] * sin(theta) + v[1] * cos(theta), v[2]};
     }
     /**
 	*\brief Reflect vector along normal
@@ -84,10 +84,10 @@ namespace Raychel {
 	*\tparam T Type of the vector
 	*\param dir direction to be reflected
 	*\param normal normal to reflect around
-	*\return vec3 the reflected vector
+	*\return basic_vec3 the reflected vector
 	*/
     template <std::floating_point T>
-    constexpr vec3<T> reflect(const vec3<T>& direction, const vec3<T>& normal) noexcept
+    constexpr basic_vec3<T> reflect(const basic_vec3<T>& direction, const basic_vec3<T>& normal) noexcept
     {
         RAYCHEL_ASSERT_NORMALIZED(direction);
         return direction - (normal * T(dot(direction, normal) * 2.0));
@@ -95,30 +95,30 @@ namespace Raychel {
 
     /**
     * \brief Get the tangent to normal
-    * 
+    *
     * \tparam T type of vector
     * \param normal normal to find the tangent to
     * \return
     */
     template <std::floating_point T>
-    vec3<T> get_tangent(const vec3<T>& normal) noexcept
+    basic_vec3<T> get_tangent(const basic_vec3<T>& normal) noexcept
     {
-        auto tangent = vec3<T>{normal[2], normal[2], -normal[0] - normal[1]};
+        auto tangent = basic_vec3<T>{normal[2], normal[2], -normal[0] - normal[1]};
         if (mag_sq(tangent) == 0) {
-            tangent = vec3<T>{-normal[1] - normal[2], normal[0], normal[0]};
+            tangent = basic_vec3<T>{-normal[1] - normal[2], normal[0], normal[0]};
         }
         return normalize(tangent);
     }
 
     /**
     * \brief Get the basis vectors around normal
-    * 
+    *
     * \tparam T type of vector
     * \param normal +Y axis for the local coordinate frame
     * \return +x, +y, +z axis as a tuple
     */
     template <std::floating_point T>
-    std::array<vec3<T>, 3> get_basis_vectors(const vec3<T>& normal) noexcept
+    std::array<basic_vec3<T>, 3> get_basis_vectors(const basic_vec3<T>& normal) noexcept
     {
         const auto j = normalize(normal);
         const auto k = get_tangent(j);
@@ -128,17 +128,17 @@ namespace Raychel {
 
     /**
     * \brief Get a random direction on the hemisphere around normal
-    * 
+    *
     * \tparam T type of vector
     * \tparam RNG_t type of RNG used to generate the random distribution
     * \param normal normal vector for the hemisphere
     * \param rng random number generator used to generate the distribution
-    * \return  
+    * \return
     */
     template <std::floating_point T, std::invocable RNG_t>
-    vec3<T> get_random_direction_on_hemisphere(const vec3<T>& normal, const RNG_t& rng) noexcept
+    basic_vec3<T> get_random_direction_on_hemisphere(const basic_vec3<T>& normal, const RNG_t& rng) noexcept
     {
-        auto test = normalize(vec3<T>{rng(), rng(), rng()});
+        auto test = normalize(basic_vec3<T>{rng(), rng(), rng()});
         if (dot(test, normal) < 0) {
             test *= -1;
         }
@@ -147,16 +147,16 @@ namespace Raychel {
 
     /**
     * \brief Get a random direction on a cone angle
-    * 
+    *
     * \tparam T type of vector
     * \tparam RNG_t type of RNG used to generate the random distribution
     * \param normal normal of the cone
     * \param cone_angle angle between the normal and the cones sides
     * \param rng random number generator used to generate the distribution
-    * \return  
+    * \return
     */
     template <std::floating_point T, std::invocable RNG_t>
-    vec3<T> get_random_direction_on_cone_angle(const vec3<T>& normal, T half_cone_angle, const RNG_t& rng) noexcept
+    basic_vec3<T> get_random_direction_on_cone_angle(const basic_vec3<T>& normal, T half_cone_angle, const RNG_t& rng) noexcept
     {
         using std::sin, std::cos;
         if (half_cone_angle != 0) {

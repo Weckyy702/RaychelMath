@@ -42,51 +42,51 @@ namespace Raychel {
     {};
 
     template <Arithmetic T>
-    using vec3 = Tuple<T, 3, Vec3Tag>;
+    using basic_vec3 = Tuple<T, 3, Vec3Tag>;
 
     template <Arithmetic T>
-    constexpr T dot(const vec3<T>& a, const vec3<T>& b) noexcept
+    constexpr T dot(const basic_vec3<T>& a, const basic_vec3<T>& b) noexcept
     {
         return (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2]);
     }
 
     template <Arithmetic T>
-    T mag(const vec3<T>& v) noexcept
+    T mag(const basic_vec3<T>& v) noexcept
     {
         return static_cast<T>(std::sqrt(mag_sq(v)));
     }
 
     template <Arithmetic T>
-    constexpr T mag_sq(const vec3<T>& v) noexcept
+    constexpr T mag_sq(const basic_vec3<T>& v) noexcept
     {
         return sq(v[0]) + sq(v[1]) + sq(v[2]);
     }
 
     template <Arithmetic T>
-    T dist(const vec3<T>& a, const vec3<T>& b) noexcept
+    T dist(const basic_vec3<T>& a, const basic_vec3<T>& b) noexcept
     {
         return mag(a - b);
     }
 
     template <Arithmetic T>
-    constexpr T dist_sq(const vec3<T>& a, const vec3<T>& b) noexcept
+    constexpr T dist_sq(const basic_vec3<T>& a, const basic_vec3<T>& b) noexcept
     {
         return mag_sq(a - b);
     }
 
     template <std::floating_point T>
-    vec3<T> normalize(const vec3<T>& v) noexcept
+    basic_vec3<T> normalize(const basic_vec3<T>& v) noexcept
     {
-        RAYCHEL_ASSERT(v != vec3<T>{});
+        RAYCHEL_ASSERT(v != basic_vec3<T>{});
         return v / mag(v);
     }
 
     // clang-format off
 
     template <Arithmetic T>
-    constexpr vec3<T> cross(const vec3<T>& a, const vec3<T>& b) noexcept
+    constexpr basic_vec3<T> cross(const basic_vec3<T>& a, const basic_vec3<T>& b) noexcept
     {
-        return vec3<T> {
+        return basic_vec3<T> {
             (a[1] * b[2]) - (a[2] * b[1]),
             (a[2] * b[0]) - (a[0] * b[2]),
             (a[0] * b[1]) - (a[1] * b[0])
@@ -96,7 +96,7 @@ namespace Raychel {
     // clang-format on
 
     template <Arithmetic T>
-    constexpr vec3<T> lerp(const vec3<T>& a, const vec3<T>& b, T x) noexcept
+    constexpr basic_vec3<T> lerp(const basic_vec3<T>& a, const basic_vec3<T>& b, T x) noexcept
     {
         return (x * b) + ((1 - x) * a);
     }

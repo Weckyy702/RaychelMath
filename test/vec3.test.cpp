@@ -20,7 +20,7 @@
     TEMPLATE_TEST_CASE(test_name, test_tag, RAYCHEL_VEC3_TEST_TYPES)           \
     {                                                                          \
         using namespace Raychel;                                               \
-        using vec3 = vec3<TestType>;
+        using vec3 = basic_vec3<TestType>;
 
 #define RAYCHEL_END_TEST }
 
@@ -110,7 +110,7 @@ RAYCHEL_END_TEST
 TEMPLATE_TEST_CASE("Vector normalization", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
-    using vec3 = vec3<TestType>;
+    using vec3 = basic_vec3<TestType>;
 
     const TestType inv_sqrt_2 = 1.0 / std::sqrt(2.0);
 
@@ -217,7 +217,7 @@ RAYCHEL_END_TEST
 TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC3_FLOATING_TYPES)
 {
     using namespace Raychel;
-    using vec3 = vec3<TestType>;
+    using vec3 = basic_vec3<TestType>;
 
     //v x 0 = 0 for any v
     {
