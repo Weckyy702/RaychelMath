@@ -42,14 +42,14 @@ namespace Raychel {
     template <Arithmetic T>
     struct basic_transform
     {
-        basic_vec3<T> position{};
+        basic_vec3<T> offset{};
         basic_quaternion<T> rotation{};
     };
 
     template <Arithmetic T>
-    constexpr auto apply(const basic_transform<T>& t, const basic_transform<T>& v)
+    constexpr auto apply(const basic_transform<T>& t, const basic_vec3<T>& v)
     {
-        return (p - t.offset) * t.rotation;
+        return (v - t.offset) * t.rotation;
     }
 
 } // namespace Raychel
