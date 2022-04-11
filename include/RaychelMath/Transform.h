@@ -42,8 +42,8 @@ namespace Raychel {
     template <Arithmetic T>
     struct basic_transform
     {
-        vec3<T> position{};
-        Quaternion<T> rotation{};
+        basic_vec3<T> position{};
+        basic_quaternion<T> rotation{};
     };
 
     template <Arithmetic T>
