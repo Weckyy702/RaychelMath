@@ -68,8 +68,6 @@ namespace Raychel {
         template <std::integral From, std::integral To>
         constexpr basic_color<To> convert_color_helper(const basic_color<From>& c)
         {
-            using Int = std::common_type_t<From, To>;
-
             constexpr auto to_max = std::numeric_limits<To>::max();
             constexpr auto from_max = std::numeric_limits<From>::max();
 
