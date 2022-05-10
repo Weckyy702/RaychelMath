@@ -89,7 +89,6 @@ namespace Raychel {
     template <std::floating_point T>
     constexpr basic_vec3<T> reflect(const basic_vec3<T>& direction, const basic_vec3<T>& normal) noexcept
     {
-        RAYCHEL_ASSERT_NORMALIZED(direction);
         return direction - (normal * T(dot(direction, normal) * 2.0));
     }
 
