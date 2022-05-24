@@ -89,7 +89,7 @@ namespace Raychel {
 
         constexpr basic_vec3<T> v() const
         {
-            return basic_vec3{x(), y(), z()};
+            return basic_vec3<T>{x(), y(), z()};
         }
     };
 
