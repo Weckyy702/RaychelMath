@@ -31,7 +31,7 @@ RAYCHEL_BEGIN_TEST("Creating Quaternions", "[RaychelMath][Quaternion]")
     const auto d = rotate_around(vec3{1, 0, 1}, half_pi<TestType>);
     const auto e = rotate_around(vec3{-9, 12, 20}, quarter_pi<TestType>);
 
-    REQUIRE(a[0] == 0);
+    REQUIRE(a[0] == 1);
     REQUIRE(a[1] == 0);
     REQUIRE(a[2] == 0);
     REQUIRE(a[3] == 0);
@@ -300,7 +300,7 @@ RAYCHEL_BEGIN_TEST("Quaternion magnitude", "[RaychelMath][Quaternion]")
 
     q = Quaternion{};
 
-    REQUIRE(mag(q) == 0);
+    REQUIRE(mag(q) == 1);
 
     q = Quaternion{0, 0, 0, 0};
 
@@ -319,7 +319,7 @@ RAYCHEL_BEGIN_TEST("Quaternion magnitude squared", "[RaychelMath][Quaternion]")
 
     q = Quaternion{};
 
-    REQUIRE(mag_sq(q) == 0);
+    REQUIRE(mag_sq(q) == 1);
 
 RAYCHEL_END_TEST
 

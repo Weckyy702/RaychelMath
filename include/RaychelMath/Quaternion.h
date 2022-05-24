@@ -30,16 +30,74 @@
 
 #include <type_traits>
 #include "Tuple.h"
-#include "vec3.h"
 #include "constants.h"
+#include "vec3.h"
 
 namespace Raychel {
     struct QuaternionTag
     {};
 
-    template <>
-    struct tuple_convertable<QuaternionTag, Vec3Tag> : std::true_type
-    {};
+    template <Arithmetic T>
+    struct QuaternionBase : public TupleBase<T, 4>
+    {
+        using Base = TupleBase<T, 4>;
+
+        using Base::Base, Base::data_;
+
+        QuaternionBase() : Base{1, 0, 0, 0} //Identity rotation
+        {}
+
+        constexpr auto& r()
+        {
+            return data_[0];
+        }
+
+        constexpr const auto& r() const
+        {
+            return data_[0];
+        }
+
+        constexpr auto& x()
+        {
+            return data_[1];
+        }
+
+        constexpr const auto& x() const
+        {
+            return data_[1];
+        }
+
+        constexpr auto& y()
+        {
+            return data_[2];
+        }
+
+        constexpr const auto& y() const
+        {
+            return data_[2];
+        }
+
+        constexpr auto& z()
+        {
+            return data_[3];
+        }
+
+        constexpr const auto& z() const
+        {
+            return data_[3];
+        }
+
+        constexpr basic_vec3<T> v() const
+        {
+            return basic_vec3{x(), y(), z()};
+        }
+    };
+
+    template <Arithmetic T>
+    struct TupleTraits<T, 4, QuaternionTag>
+    {
+        using Base = QuaternionBase<T>;
+    };
 
     template <Arithmetic T>
     using basic_quaternion = Tuple<T, 4, QuaternionTag>;
@@ -188,7 +246,7 @@ namespace Raychel {
         return (a * s0) + (b * s1);
     }
 
-    template<Arithmetic T>
+    template <Arithmetic T>
     constexpr basic_quaternion<T> look_at(const basic_vec3<T>& old_forward, const basic_vec3<T>& new_forward)
     {
         constexpr T threshold = 0.9998;
@@ -196,7 +254,7 @@ namespace Raychel {
         const auto k_cos_theta = dot(old_forward, new_forward);
         const auto k = std::sqrt(mag_sq(old_forward) * mag_sq(new_forward));
 
-        if((k_cos_theta) / k < -threshold){
+        if ((k_cos_theta) / k < -threshold) {
             const auto orth = get_tangent(old_forward);
             return rotate_around(orth, pi<T>);
         }
