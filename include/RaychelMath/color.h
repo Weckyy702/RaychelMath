@@ -33,10 +33,58 @@
 #include <limits>
 #include <numeric>
 #include <ratio>
+
 namespace Raychel {
 
     struct ColorTag
     {};
+
+    template <Arithmetic T>
+    struct ColorBase : public TupleBase<T, 3>
+    {
+        using Base = TupleBase<T, 3>;
+        using Base::Base, Base::data_, Base::get;
+
+        template <std::convertible_to<T> T_>
+        ColorBase(T_ v) : Base{v, v, v}
+        {}
+
+        constexpr auto& r()
+        {
+            return data_[0];
+        }
+
+        constexpr const auto& r() const
+        {
+            return data_[0];
+        }
+
+        constexpr auto& g()
+        {
+            return data_[1];
+        }
+
+        constexpr const auto& g() const
+        {
+            return data_[1];
+        }
+
+        constexpr auto& b()
+        {
+            return data_[2];
+        }
+
+        constexpr const auto& b() const
+        {
+            return data_[2];
+        }
+    };
+
+    template <Arithmetic T>
+    struct TupleTraits<T, 3, ColorTag>
+    {
+        using Base = ColorBase<T>;
+    };
 
     template <Arithmetic T>
     using basic_color = Tuple<T, 3, ColorTag>;
@@ -73,7 +121,8 @@ namespace Raychel {
 
             if constexpr (to_max > from_max) {
                 constexpr To ratio = to_max / from_max;
-                return basic_color<To>{static_cast<To>(c[0]) * ratio, static_cast<To>(c[1]) * ratio, static_cast<To>(c[2]) * ratio};
+                return basic_color<To>{
+                    static_cast<To>(c[0]) * ratio, static_cast<To>(c[1]) * ratio, static_cast<To>(c[2]) * ratio};
             }
             //TODO: find a better way to dodge lossy floating point arithmetic
             constexpr auto ratio = static_cast<double>(to_max) / from_max;
