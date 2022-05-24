@@ -34,7 +34,7 @@
 namespace Raychel {
     using namespace std::numbers;
 
-    template<std::floating_point Real>
+    template <std::floating_point Real>
     constexpr auto pi = pi_v<Real>;
 
     template <std::floating_point Real>
