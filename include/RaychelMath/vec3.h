@@ -42,6 +42,49 @@ namespace Raychel {
     {};
 
     template <Arithmetic T>
+    struct Vec3Base : public TupleBase<T, 3>
+    {
+        using Base = TupleBase<T, 3>;
+        using Base::Base, Base::data_;
+
+        constexpr auto& x()
+        {
+            return data_[0];
+        }
+
+        constexpr const auto& x() const
+        {
+            return data_[0];
+        }
+
+        constexpr auto& y()
+        {
+            return data_[1];
+        }
+
+        constexpr const auto& y() const
+        {
+            return data_[1];
+        }
+
+        constexpr auto& z()
+        {
+            return data_[2];
+        }
+
+        constexpr const auto& z() const
+        {
+            return data_[2];
+        }
+    };
+
+    template <Arithmetic T>
+    struct TupleTraits<T, 3, Vec3Tag>
+    {
+        using Base = Vec3Base<T>;
+    };
+
+    template <Arithmetic T>
     using basic_vec3 = Tuple<T, 3, Vec3Tag>;
 
     template <Arithmetic T>

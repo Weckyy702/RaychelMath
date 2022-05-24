@@ -117,17 +117,17 @@ TEMPLATE_TEST_CASE("Vector normalization", "[RaychelMath][Vector3]", RAYCHEL_VEC
     {
         const vec3 v = normalize(vec3{1, 0, 1});
 
-        REQUIRE(equivalent<TestType>(v[0], inv_sqrt_2));
-        REQUIRE(equivalent<TestType>(v[1], 0));
-        REQUIRE(equivalent<TestType>(v[2], inv_sqrt_2));
+        REQUIRE(equivalent<TestType>(v.x(), inv_sqrt_2));
+        REQUIRE(equivalent<TestType>(v.y(), 0));
+        REQUIRE(equivalent<TestType>(v.z(), inv_sqrt_2));
     }
 
     {
         const vec3 v = normalize(vec3{12, 0, 12});
 
-        REQUIRE(equivalent(v[0], inv_sqrt_2));
-        REQUIRE(equivalent<TestType>(v[1], 0));
-        REQUIRE(equivalent(v[2], inv_sqrt_2));
+        REQUIRE(equivalent(v.x(), inv_sqrt_2));
+        REQUIRE(equivalent<TestType>(v.y(), 0));
+        REQUIRE(equivalent(v.z(), inv_sqrt_2));
     }
 
 }
@@ -226,9 +226,9 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
 
         const vec3 c = cross(v, b);
 
-        REQUIRE(equivalent<TestType>(c[0], 0));
-        REQUIRE(equivalent<TestType>(c[1], 0));
-        REQUIRE(equivalent<TestType>(c[2], 0));
+        REQUIRE(equivalent<TestType>(c.x(), 0));
+        REQUIRE(equivalent<TestType>(c.y(), 0));
+        REQUIRE(equivalent<TestType>(c.z(), 0));
     }
 
     //a || b => a x b = 0
@@ -237,21 +237,21 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
 
         vec3 c = cross(v, v);
 
-        REQUIRE(equivalent<TestType>(c[0], 0));
-        REQUIRE(equivalent<TestType>(c[1], 0));
-        REQUIRE(equivalent<TestType>(c[2], 0));
+        REQUIRE(equivalent<TestType>(c.x(), 0));
+        REQUIRE(equivalent<TestType>(c.y(), 0));
+        REQUIRE(equivalent<TestType>(c.z(), 0));
 
         c = cross(v, -v);
 
-        REQUIRE(equivalent<TestType>(c[0], 0));
-        REQUIRE(equivalent<TestType>(c[1], 0));
-        REQUIRE(equivalent<TestType>(c[2], 0));
+        REQUIRE(equivalent<TestType>(c.x(), 0));
+        REQUIRE(equivalent<TestType>(c.y(), 0));
+        REQUIRE(equivalent<TestType>(c.z(), 0));
 
         c = cross(v, v * TestType(3));
 
-        REQUIRE(equivalent<TestType>(c[0], 0));
-        REQUIRE(equivalent<TestType>(c[1], 0));
-        REQUIRE(equivalent<TestType>(c[2], 0));
+        REQUIRE(equivalent<TestType>(c.x(), 0));
+        REQUIRE(equivalent<TestType>(c.y(), 0));
+        REQUIRE(equivalent<TestType>(c.z(), 0));
     }
 
     //a x b = -(b x a)
@@ -262,9 +262,9 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
         const vec3 c_pos = cross(a, b);
         const vec3 c_neg = cross(b, a);
 
-        REQUIRE(equivalent<TestType>(c_pos[0], -c_neg[0]));
-        REQUIRE(equivalent<TestType>(c_pos[1], -c_neg[1]));
-        REQUIRE(equivalent<TestType>(c_pos[2], -c_neg[2]));
+        REQUIRE(equivalent<TestType>(c_pos.x(), -c_neg[0]));
+        REQUIRE(equivalent<TestType>(c_pos.y(), -c_neg[1]));
+        REQUIRE(equivalent<TestType>(c_pos.z(), -c_neg[2]));
     }
 
     //cross product follows the right hand rule
@@ -275,21 +275,21 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
 
         const vec3 xy = cross(x, y);
 
-        REQUIRE(equivalent<TestType>(xy[0], 0));
-        REQUIRE(equivalent<TestType>(xy[1], 0));
-        REQUIRE(equivalent<TestType>(xy[2], 1));
+        REQUIRE(equivalent<TestType>(xy.x(), 0));
+        REQUIRE(equivalent<TestType>(xy.y(), 0));
+        REQUIRE(equivalent<TestType>(xy.z(), 1));
 
         const vec3 xz = cross(x, z);
 
-        REQUIRE(equivalent<TestType>(xz[0], 0));
-        REQUIRE(equivalent<TestType>(xz[1], -1));
-        REQUIRE(equivalent<TestType>(xz[2], 0));
+        REQUIRE(equivalent<TestType>(xz.x(), 0));
+        REQUIRE(equivalent<TestType>(xz.y(), -1));
+        REQUIRE(equivalent<TestType>(xz.z(), 0));
 
         const vec3 zy = cross(z, y);
 
-        REQUIRE(equivalent<TestType>(zy[0], -1));
-        REQUIRE(equivalent<TestType>(zy[1], 0));
-        REQUIRE(equivalent<TestType>(zy[2], 0));
+        REQUIRE(equivalent<TestType>(zy.x(), -1));
+        REQUIRE(equivalent<TestType>(zy.y(), 0));
+        REQUIRE(equivalent<TestType>(zy.z(), 0));
     }
 
     //cross product follows the right hand rule, Chapter Two
@@ -299,15 +299,16 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
 
         auto res = cross(a, b);
 
-        REQUIRE(res[0] == -14);
-        REQUIRE(res[1] == -214);
-        REQUIRE(res[2] == -49);
+        REQUIRE(res.x() == -14);
+        REQUIRE(res.y() == -214);
+        REQUIRE(res.z() == -49);
 
         res = cross(b, a);
 
-        REQUIRE(res[0] == 14);
-        REQUIRE(res[1] == 214);
-        REQUIRE(res[2] == 49);
+        REQUIRE(res.x() == 14);
+        REQUIRE(res.y() == 214);
+        REQUIRE(res.z() == 49);
+
     }
 }
 
