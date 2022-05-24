@@ -3,7 +3,7 @@
 * \author Weckyy702 (weckyy702@gmail.com)
 * \brief Header file for Tuple class
 * \date 2022-03-03
-* 
+*
 * MIT License
 * Copyright (c) [2022] [Weckyy702 (weckyy702@gmail.com | https://github.com/Weckyy702)]
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -12,10 +12,10 @@
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in all
 * copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,16 +23,14 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-* 
+*
 */
 #ifndef RAYCHELMATH_TUPLE_H
 #define RAYCHELMATH_TUPLE_H
 
 #include "RaychelCore/Raychel_assert.h"
-#include "concepts.h"
+#include "TupleBase.h"
 
-#include <algorithm>
-#include <array>
 #include <iostream>
 #include <tuple>
 #include <utility>
@@ -60,23 +58,16 @@ namespace Raychel {
     concept TupleConvertable = is_tuple_convertible_v<FromTag, ToTag>;
 
     template <Arithmetic T, std::size_t N, typename Tag = TupleTag>
-    requires(N != 0) class Tuple
+    requires(N != 0) class Tuple : public TupleTraits<T, N, Tag>::Base
     {
-    public:
-        template <std::convertible_to<T>... Us>
-        constexpr explicit Tuple(Us&&... us) : data_{static_cast<T>(us)...}
-        {}
+        using _base = typename TupleTraits<T, N, Tag>::Base;
+        using _base::data_;
 
-        template <std::size_t N_>
-        constexpr Tuple(const std::array<T, N_>& values)
-        {
-            if constexpr (N_ > N) {
-                std::copy_n(values.begin(), N, data_.begin());
-            } else {
-                data_.fill(0);
-                std::copy_n(values.begin(), N_, data_.begin());
-            }
-        }
+        static_assert(std::is_base_of_v<TupleBase<T, N>, _base>, "Tuple base must be derived from TupleBase");
+
+    public:
+        using Base = _base;
+        using Base::Base;
 
         template <std::size_t N_, TupleConvertable<Tag> Tag_>
         requires(N_ >= N) constexpr operator Tuple<T, N_, Tag_>() const
@@ -88,28 +79,6 @@ namespace Raychel {
         requires(N_ < N) constexpr explicit operator Tuple<T, N_, Tag_>() const
         {
             return Tuple<T, N_, Tag_>{data_};
-        }
-
-        constexpr T& operator[](std::size_t i)
-        {
-            if (!std::is_constant_evaluated()) {
-                RAYCHEL_ASSERT(i < N);
-            }
-            return data_[i];
-        }
-
-        constexpr const T& operator[](std::size_t i) const
-        {
-            if (!std::is_constant_evaluated()) {
-                RAYCHEL_ASSERT(i < N);
-            }
-            return data_[i];
-        }
-
-        template <std::size_t I>
-        requires(I < N) constexpr T get() const
-        {
-            return data_[I];
         }
 
         template <TupleConvertable<Tag> Tag_>
@@ -147,29 +116,6 @@ namespace Raychel {
             }
             return *this;
         }
-
-        auto begin() noexcept
-        {
-            return data_.begin();
-        }
-
-        auto begin() const noexcept
-        {
-            return data_.begin();
-        }
-
-        auto end() noexcept
-        {
-            return data_.end();
-        }
-
-        auto end() const noexcept
-        {
-            return data_.end();
-        }
-
-    private:
-        std::array<T, N> data_{};
     };
 
     template <Arithmetic... Ts>
@@ -177,16 +123,6 @@ namespace Raychel {
 
     template <Arithmetic T, std::size_t N>
     Tuple(std::array<T, N>) -> Tuple<T, N>;
-
-    template <Arithmetic T, std::size_t N, typename Tag>
-    inline std::ostream& operator<<(std::ostream& os, const Tuple<T, N, Tag>& obj)
-    {
-        os << '{';
-        for (std::size_t i{0}; i != N-1; ++i) {
-            os << obj[i] << ", ";
-        }
-        return os << obj[N-1] << '}';
-    }
 
     template <Arithmetic T, std::size_t N, typename Tag, TupleConvertable<Tag> Tag_>
     constexpr Tuple<T, N, Tag> operator+(const Tuple<T, N, Tag>& a, const Tuple<T, N, Tag_>& b)
