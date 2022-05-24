@@ -1,9 +1,9 @@
 #include <type_traits>
 #include "catch2/catch.hpp"
 
+#include "RaychelMath/constants.h"
 #include "RaychelMath/equivalent.h"
 #include "RaychelMath/vec2.h"
-#include "RaychelMath/constants.h"
 
 //clang-format doesn't like these macros
 // clang-format off
@@ -70,8 +70,8 @@ TEMPLATE_TEST_CASE("vec2 normalization", "[RaychelMath][Vector2]", RAYCHEL_VEC2_
     {
         const vec2 v = normalize(vec2{1, 1});
 
-        REQUIRE(v[0] == Approx(inv_sqrt_2));
-        REQUIRE(v[1] == Approx(inv_sqrt_2));
+        REQUIRE(v.x() == Approx(inv_sqrt_2));
+        REQUIRE(v.y() == Approx(inv_sqrt_2));
     }
 }
 
@@ -123,16 +123,16 @@ TEMPLATE_TEST_CASE("vec2 rotation", "[RaychelMath][Vector2]", RAYCHEL_VEC2_FLOAT
         const vec2 v{1, 0};
         const auto v2 = rotate(v, pi);
 
-        REQUIRE(v2[0] == -1);
-        REQUIRE(Raychel::equivalent<TestType>(v2[1], 0));
+        REQUIRE(v2.x() == -1);
+        REQUIRE(Raychel::equivalent<TestType>(v2.y(), 0));
     }
 
     {
         const vec2 v{1, 0};
         const auto v2 = rotate(v, half_pi);
 
-        REQUIRE(Raychel::equivalent<TestType>(v2[0], 0));
-        REQUIRE(v2[1] == 1);
+        REQUIRE(Raychel::equivalent<TestType>(v2.x(), 0));
+        REQUIRE(v2.y() == 1);
     }
 }
 // clang-format on
