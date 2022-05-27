@@ -158,7 +158,7 @@ namespace Raychel {
     template <Arithmetic T>
     constexpr auto operator*(const basic_vec3<T>& v, const basic_quaternion<T>& _q)
     {
-        RAYCHEL_ASSERT(_q != basic_quaternion<T>{});
+        RAYCHEL_ASSERT(_q != (basic_quaternion<T>{0, 0, 0, 0}));
         const auto q = normalize(_q);
 
         //following is the expanded and somewhat optimized version of q * p * q^-1 with p = basic_quaternionImp{0.0, v[0], v.y, v.z}
