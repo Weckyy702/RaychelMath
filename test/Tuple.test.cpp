@@ -170,4 +170,88 @@ RAYCHEL_BEGIN_TEST("Tuple stream output", "[RaychelMath][Tuple]")
 
 RAYCHEL_END_TEST
 
+RAYCHEL_BEGIN_TEST("Tuple stream input", "[RaychelMath][Tuple]")
+
+    using namespace std::literals;
+
+    //Success case
+    {
+        constexpr Tuple<TestType, 3> a{420, 69};
+
+        std::stringstream ss;
+        ss << a;
+
+        Tuple<TestType, 3> b;
+        ss >> b;
+
+        REQUIRE(ss.good());
+        REQUIRE(b == a);
+    }
+
+    //Failure: no leading '{'
+    {
+        std::stringstream ss;
+        ss << "14 15 16}";
+
+        Tuple<TestType, 3> a{};
+
+        ss >> a;
+
+        REQUIRE(ss.fail());
+        REQUIRE(a == Tuple<TestType, 3>{});
+    }
+
+    //Failure: wrong separator
+    {
+        std::stringstream ss;
+        ss << "{1, 2, 3}";
+
+        Tuple<TestType, 3> a{};
+
+        ss >> a;
+
+        REQUIRE(ss.fail());
+        REQUIRE(a == Tuple<TestType, 3>{1, 0, 0});
+    }
+
+    //Failure: no closing '}' (too many values)
+    {
+        std::stringstream ss;
+        ss << "{1 2 3 4}";
+
+        Tuple<TestType, 3> a{};
+
+        ss >> a;
+
+        REQUIRE(ss.fail());
+        REQUIRE(a == Tuple<TestType, 3>{1, 2, 3});
+    }
+
+    //Failure: not enough values
+    {
+        std::stringstream ss;
+        ss << "{1 2}";
+
+        Tuple<TestType, 3> a{};
+
+        ss >> a;
+
+        REQUIRE(ss.fail());
+        REQUIRE(a == Tuple<TestType, 3>{1, 2});
+    }
+
+    //Failure: non-representable values
+    {
+        std::stringstream ss;
+        ss << "{1 2 three}";
+
+        Tuple<TestType, 3> a{};
+
+        ss >> a;
+
+        REQUIRE(ss.fail());
+        REQUIRE(a == Tuple<TestType, 3>{1, 2});
+    }
+RAYCHEL_END_TEST
+
 // clang-format on

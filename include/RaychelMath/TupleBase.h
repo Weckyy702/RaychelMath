@@ -111,6 +111,33 @@ namespace Raychel {
         return os << obj[N - 1] << '}';
     }
 
+    template <Arithmetic T, std::size_t N>
+    inline std::istream& operator>>(std::istream& is, TupleBase<T, N>& obj)
+    {
+        const auto saved_flags = is.flags();
+        is.flags(std::ios_base::dec);
+
+        bool did_fail{false};
+        char control_char{};
+
+        did_fail |= !((is >> control_char) && control_char == '{');
+
+        for (std::size_t i{0}; i != N - 1 && !did_fail; ++i) {
+            did_fail |= !(is >> obj[i]);
+            did_fail |= !((is >> control_char) && (control_char == ' '));
+        }
+
+        if (!did_fail) {
+            did_fail |= !(is >> obj[N - 1]);
+            did_fail |= !((is >> control_char) && (control_char == '}'));
+        }
+
+        if (did_fail)
+            is.setstate(std::ios_base::failbit);
+        is.flags(saved_flags);
+        return is;
+    }
+
     template <Arithmetic T, std::size_t N, typename Tag>
     struct TupleTraits
     {
