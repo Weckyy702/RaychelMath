@@ -32,6 +32,7 @@
 
 #include <algorithm>
 #include <array>
+#include <iostream>
 
 namespace Raychel {
 
@@ -105,7 +106,7 @@ namespace Raychel {
     {
         os << '{';
         for (std::size_t i{0}; i != N - 1; ++i) {
-            os << obj[i] << ", ";
+            os << obj[i] << ' ';
         }
         return os << obj[N - 1] << '}';
     }

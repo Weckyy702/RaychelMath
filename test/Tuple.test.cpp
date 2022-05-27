@@ -2,6 +2,8 @@
 
 #include "catch2/catch.hpp"
 
+#include <sstream>
+
 #define RAYCHEL_TUPLE_TEST_TYPES int, size_t, float, double, long double
 
 #define RAYCHEL_BEGIN_TEST(test_name, test_tag)                                                                                  \
@@ -156,6 +158,16 @@ RAYCHEL_BEGIN_TEST("Dividing tuples", "[RaychelMath][Tuple]")
         REQUIRE(c[1] == 5);
         REQUIRE(c[2] == 6);
     }
+RAYCHEL_END_TEST
+
+RAYCHEL_BEGIN_TEST("Tuple stream output", "[RaychelMath][Tuple]")
+    constexpr Tuple<TestType, 3> a{420, 69};
+
+    std::stringstream ss;
+    ss << a;
+
+    REQUIRE(ss.str() == "{420 69 0}");
+
 RAYCHEL_END_TEST
 
 // clang-format on
