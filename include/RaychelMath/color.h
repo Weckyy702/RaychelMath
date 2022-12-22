@@ -30,6 +30,7 @@
 
 #include "Tuple.h"
 
+#include <cmath>
 #include <limits>
 #include <numeric>
 #include <ratio>
@@ -46,7 +47,7 @@ namespace Raychel {
         using Base::Base, Base::data_, Base::get;
 
         template <std::convertible_to<T> T_>
-        ColorBase(T_ v) : Base{v, v, v}
+        explicit ColorBase(T_ v) : Base{v, v, v}
         {}
 
         constexpr auto& r()
@@ -54,7 +55,7 @@ namespace Raychel {
             return data_[0];
         }
 
-        constexpr const auto& r() const
+        [[nodiscard]] constexpr const auto& r() const
         {
             return data_[0];
         }
@@ -64,7 +65,7 @@ namespace Raychel {
             return data_[1];
         }
 
-        constexpr const auto& g() const
+        [[nodiscard]] constexpr const auto& g() const
         {
             return data_[1];
         }
@@ -74,7 +75,7 @@ namespace Raychel {
             return data_[2];
         }
 
-        constexpr const auto& b() const
+        [[nodiscard]] constexpr const auto& b() const
         {
             return data_[2];
         }
