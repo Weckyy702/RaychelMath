@@ -171,11 +171,55 @@ namespace Raychel {
     constexpr basic_color<T> color_from_hex(std::uint32_t hex)
     {
         using u8 = std::uint8_t;
-        const u8 r = (hex >> 16) & 0xFFU;
-        const u8 g = (hex >> 8) & 0xFFU;
+        const u8 r = (hex >> 16U) & 0xFFU;
+        const u8 g = (hex >> 8U) & 0xFFU;
         const u8 b = hex & 0xFFU;
 
         return convert_color<T>(basic_color<u8>{r, g, b});
+    }
+
+    template <Arithmetic T>
+    basic_color<T> color_from_temperature(std::uint32_t _temp)
+    {
+        // Thank you to Tanner Helland at https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
+        using u8 = std::uint8_t;
+
+        const auto temperature = static_cast<double>(std::clamp<std::uint32_t>(_temp, 1'000, 40'000)) / 100.;
+
+        const auto red = [=]() -> u8 {
+            if (temperature <= 66.) {
+                return 255;
+            }
+            auto red = 329.698727446 * std::pow(temperature - 60, -.1332047592);
+            red = std::clamp(red, 0., 255.);
+            return static_cast<u8>(red);
+        }();
+
+        const auto green = [=]() -> u8 {
+            if (temperature <= 66.0) {
+                auto green = 99.4708025861 * std::log(temperature) - 161.1195681661;
+                green = std::clamp(green, 0., 255.);
+                return static_cast<u8>(green);
+            }
+            auto green = 288.1221695283 * std::pow(temperature - 60., -.0755148492);
+            green = std::clamp(green, 0., 255.);
+            return static_cast<u8>(green);
+        }();
+
+        const auto blue = [=]() -> u8 {
+            if (temperature >= 66) {
+                return 255;
+            }
+            if (temperature <= 19) {
+                return 0;
+            }
+
+            auto blue = 138.5177312231 * std::log(temperature - 10.) - 305.0447927307;
+            blue = std::clamp(blue, 0., 255.);
+            return static_cast<u8>(blue);
+        }();
+
+        return convert_color<T>(basic_color<u8>{red, green, blue});
     }
 
 } // namespace Raychel

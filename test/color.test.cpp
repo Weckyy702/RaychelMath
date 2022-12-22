@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <limits>
 #include <type_traits>
 #include "catch2/catch.hpp"
@@ -284,5 +285,30 @@ RAYCHEL_BEGIN_TEST("Color from HEX", "[RaychelMath][ColorRGB]")
     REQUIRE(equivalent<TestType>(dark_yellow.r(), half));
     REQUIRE(equivalent<TestType>(dark_yellow.g(), half));
     REQUIRE(dark_yellow.b() == 0);
+
+RAYCHEL_END_TEST
+
+//NOLINTNEXTLINE: i am using a *macro*! :O (despicable)
+RAYCHEL_BEGIN_TEST("Color from temperature", "[RaychelMath][ColorRGB]")
+    //Test cases taken from https://github.com/m-lima/tempergb
+
+    using c = basic_color<std::uint8_t>;
+
+    const auto expect_color = [](std::uint32_t temp, c _expected){
+        const auto given = color_from_temperature<TestType>(temp);
+        const auto expected = convert_color<TestType>(_expected);
+
+        REQUIRE(given == expected);
+    };
+
+    expect_color(0, c{255, 67, 0});
+    expect_color(1500, c{255, 108, 0});
+    expect_color(2500, c{255, 159, 70});
+    expect_color(5000, c{255, 228, 205});
+    expect_color(6600, c{255, 255, 255});
+    expect_color(10'000, c{201, 218, 255});
+    expect_color(15'000, c{181, 205, 255});
+    expect_color(40'000, c{151, 185, 255});
+    expect_color(60'000, c{151, 185, 255});
 
 RAYCHEL_END_TEST
