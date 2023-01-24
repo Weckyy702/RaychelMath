@@ -312,6 +312,26 @@ TEMPLATE_TEST_CASE("Vector cross product", "[RaychelMath][Vector3]", RAYCHEL_VEC
     }
 }
 
+RAYCHEL_BEGIN_TEST("Vector swizzle", "[RaychelMath][Vector3]")
+
+    const vec3 v{1, 2, 3};
+
+    {
+        vec3 swizzled = swizzle<0, 1, 2>(v);
+        REQUIRE(swizzled == v);
+
+        swizzled = swizzle<2, 1, 0>(v);
+
+        REQUIRE(swizzled == vec3{3, 2, 1});
+    }
+
+    {
+        const auto larger = swizzle<0, 1, 2, 0, 1, 2>(v);
+        REQUIRE(larger == Tuple<TestType, 6>{1, 2, 3, 1, 2, 3});
+    }
+
+RAYCHEL_END_TEST
+
 #ifdef _MSC_VER
     #pragma warning ( pop )
 #endif

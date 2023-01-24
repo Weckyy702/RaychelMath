@@ -254,4 +254,33 @@ RAYCHEL_BEGIN_TEST("Tuple stream input", "[RaychelMath][Tuple]")
     }
 RAYCHEL_END_TEST
 
+RAYCHEL_BEGIN_TEST("Tuple swizzle", "[RaychelMath][Tuple]")
+    using Tuple = Raychel::Tuple<TestType, 3>;
+
+    constexpr Tuple a{1, 2, 3};
+    //Case 1: same size swizzle
+    {
+        auto b = swizzle<0, 1, 2>(a);
+
+        REQUIRE(b == a);
+
+        b = swizzle<2, 1, 0>(a);
+
+        REQUIRE(b == Tuple{3, 2, 1});
+    }
+
+    // Case 2: smaller swizzle
+    {
+        const auto b = swizzle<2, 1>(a);
+
+        REQUIRE(b == Raychel::Tuple<TestType, 2>{3, 2});
+    }
+
+    // Case 3: larger size
+    {
+        constexpr auto d = swizzle<0, 1, 2, 0>(a);
+        REQUIRE(d == Raychel::Tuple<TestType, 4>{1, 2, 3, 1});
+    }
+RAYCHEL_END_TEST
+
 // clang-format on

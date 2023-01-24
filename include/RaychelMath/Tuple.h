@@ -31,11 +31,29 @@
 #include "RaychelCore/Raychel_assert.h"
 #include "TupleBase.h"
 
+#include <cstddef>
 #include <iostream>
 #include <tuple>
 #include <utility>
 
 namespace Raychel {
+
+    namespace details {
+        template <std::size_t N, std::size_t Head, std::size_t... Tail>
+        struct IndeciesValid
+        {
+            static constexpr bool value = IndeciesValid<N, Head>::value && IndeciesValid<N, Tail...>::value;
+        };
+
+        template <std::size_t N, std::size_t Head>
+        struct IndeciesValid<N, Head>
+        {
+            static constexpr bool value = Head < N;
+        };
+
+        template <std::size_t N, std::size_t... Indecies>
+        constexpr auto indecies_valid = IndeciesValid<N, Indecies...>::value;
+    } // namespace details
 
     //Tag to identify "just a tuple" without further semantic meaning
     struct TupleTag
@@ -185,6 +203,12 @@ namespace Raychel {
     constexpr bool operator!=(const Tuple<T, N, Tag>& a, const Tuple<T, N, Tag_>& b)
     {
         return !(a == b);
+    }
+
+    template <std::size_t... Indecies, Arithmetic T, std::size_t N, typename Tag>
+    requires(details::indecies_valid<N, Indecies...>) constexpr auto swizzle(const Tuple<T, N, Tag>& t)
+    {
+        return Tuple<T, sizeof...(Indecies), Tag>{t[Indecies]...};
     }
 
 } // namespace Raychel
