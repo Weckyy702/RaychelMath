@@ -113,6 +113,15 @@ namespace Raychel {
         return (c[0] + c[1] + c[2]) / 3;
     }
 
+    template <std::floating_point T>
+    constexpr T luminance(const basic_color<T>& c)
+    {
+        //taken from https://www.w3.org/WAI/GL/wiki/Relative_luminance
+        constexpr basic_color<T> luminance_coefficients{.212655, .715158, .072187};
+
+        return (c[0] * luminance_coefficients[0]) + (c[1] * luminance_coefficients[1]) + (c[2] * luminance_coefficients[2]);
+    }
+
     namespace details {
         template <std::integral From, std::integral To>
         constexpr basic_color<To> convert_color_helper(const basic_color<From>& c)
