@@ -29,11 +29,13 @@
 #define RAYCHELMATH_TUPLE_H
 
 #include "RaychelCore/Raychel_assert.h"
+#include "RaychelMath/concepts.h"
 #include "TupleBase.h"
 
 #include <cstddef>
 #include <iostream>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 
 namespace Raychel {
@@ -76,7 +78,8 @@ namespace Raychel {
     concept TupleConvertable = is_tuple_convertible_v<FromTag, ToTag>;
 
     template <Arithmetic T, std::size_t N, typename Tag = TupleTag>
-    requires(N != 0) class Tuple : public TupleTraits<T, N, Tag>::Base
+        requires(N != 0)
+    class Tuple : public TupleTraits<T, N, Tag>::Base
     {
         using _base = typename TupleTraits<T, N, Tag>::Base;
         using _base::data_;
@@ -88,13 +91,22 @@ namespace Raychel {
         using Base::Base;
 
         template <std::size_t N_, TupleConvertable<Tag> Tag_>
-        requires(N_ >= N) constexpr operator Tuple<T, N_, Tag_>() const
+            requires(N_ >= N)
+        constexpr operator Tuple<T, N_, Tag_>() const
         {
             return Tuple<T, N_, Tag_>{data_};
         }
 
+        template <Arithmetic To>
+            requires(std::is_convertible_v<T, To>)
+        constexpr operator Tuple<To, N, Tag>() const
+        {
+            return Tuple<To, N, Tag>{data_};
+        }
+
         template <std::size_t N_, TupleConvertable<Tag> Tag_>
-        requires(N_ < N) constexpr explicit operator Tuple<T, N_, Tag_>() const
+            requires(N_ < N)
+        constexpr explicit operator Tuple<T, N_, Tag_>() const
         {
             return Tuple<T, N_, Tag_>{data_};
         }
@@ -206,7 +218,8 @@ namespace Raychel {
     }
 
     template <std::size_t... Indecies, Arithmetic T, std::size_t N, typename Tag>
-    requires(details::indecies_valid<N, Indecies...>) constexpr auto swizzle(const Tuple<T, N, Tag>& t)
+        requires(details::indecies_valid<N, Indecies...>)
+    constexpr auto swizzle(const Tuple<T, N, Tag>& t)
     {
         return Tuple<T, sizeof...(Indecies), Tag>{t[Indecies]...};
     }
@@ -220,7 +233,8 @@ struct std::tuple_size<Raychel::Tuple<T, N, Tag>>
 };
 
 template <std::size_t I, Raychel::Arithmetic T, std::size_t N, typename Tag>
-requires(I < N) struct std::tuple_element<I, Raychel::Tuple<T, N, Tag>>
+    requires(I < N)
+struct std::tuple_element<I, Raychel::Tuple<T, N, Tag>>
 {
     using type = T;
 };
