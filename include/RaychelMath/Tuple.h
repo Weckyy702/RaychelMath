@@ -101,7 +101,13 @@ namespace Raychel {
             requires(std::is_convertible_v<T, To>)
         constexpr explicit operator Tuple<To, N, Tag>() const
         {
-            return Tuple<To, N, Tag>{data_};
+            Tuple<To, N, Tag> result;
+
+            for (std::size_t i{}; i != N; ++i) {
+                result[i] = static_cast<To>(data_[i]);
+            }
+
+            return result;
         }
 
         template <std::size_t N_, TupleConvertable<Tag> Tag_>

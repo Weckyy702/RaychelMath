@@ -70,6 +70,18 @@ RAYCHEL_BEGIN_TEST("Creating tuples", "[RaychelMath][Tuple]")
     }
 RAYCHEL_END_TEST
 
+RAYCHEL_BEGIN_TEST("Converting tuple", "[RaychelMath][Tuple]")
+    using To = Tuple<unsigned char, 3>;
+
+    const Tuple<TestType, 3> source{0, 1, 2};
+
+    const To dest = static_cast<To>(source);
+
+    REQUIRE(dest[0] == 0);
+    REQUIRE(dest[1] == 1);
+    REQUIRE(dest[2] == 2);
+RAYCHEL_END_TEST
+
 TEST_CASE("Tuple structured bindings", "[RaychelMath][Tuple]")
 {
 
