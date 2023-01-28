@@ -92,14 +92,14 @@ namespace Raychel {
 
         template <std::size_t N_, TupleConvertable<Tag> Tag_>
             requires(N_ >= N)
-        constexpr operator Tuple<T, N_, Tag_>() const
+        constexpr explicit operator Tuple<T, N_, Tag_>() const
         {
             return Tuple<T, N_, Tag_>{data_};
         }
 
         template <Arithmetic To>
             requires(std::is_convertible_v<T, To>)
-        constexpr operator Tuple<To, N, Tag>() const
+        constexpr explicit operator Tuple<To, N, Tag>() const
         {
             return Tuple<To, N, Tag>{data_};
         }
